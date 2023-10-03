@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 
 class ComposeTweetImage extends StatelessWidget {
-  final File image;
-  final Function onCrossIconPressed;
-  const ComposeTweetImage({Key key, this.image, this.onCrossIconPressed})
+  final File? image;
+  final Function() onCrossIconPressed;
+  const ComposeTweetImage(
+      {Key? key, required this.image, required this.onCrossIconPressed})
       : super(key: key);
 
   @override
@@ -24,7 +25,7 @@ class ComposeTweetImage extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       image: DecorationImage(
-                          image: FileImage(image), fit: BoxFit.cover),
+                          image: FileImage(image!), fit: BoxFit.cover),
                     ),
                   ),
                 ),

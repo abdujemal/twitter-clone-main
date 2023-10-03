@@ -5,7 +5,7 @@ import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 class HeaderWidget extends StatelessWidget {
   final String title;
   final bool secondHeader;
-  const HeaderWidget(this.title,{Key key, this.secondHeader = false}) : super(key: key);
+  const HeaderWidget(this.title,{Key? key, this.secondHeader = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class HeaderWidget extends StatelessWidget {
       color: TwitterColor.mystic,
       alignment: Alignment.centerLeft,
       child: UrlText(
-        text: title ?? '',
+        text: title,
         style: TextStyle(
             fontSize: 20,
             color: AppColor.darkGrey,

@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:intl/intl.dart';
-import 'package:share/share.dart';
+import 'package:social_share/social_share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:developer' as developer;
 
-final kAnalytics = FirebaseAnalytics();
+final kAnalytics = FirebaseAnalyticsAndroid();
 final DatabaseReference kDatabase = FirebaseDatabase.instance.reference();
 final FirebaseFirestore kfirestore = FirebaseFirestore.instance;
 final kScreenloader = CustomLoader();
@@ -101,7 +101,7 @@ String getPollTime(String date) {
       ' min';
 }
 
-String getSocialLinks(String url) {
+String? getSocialLinks(String url) {
   if (url != null && url.isNotEmpty) {
     url = url.contains("https://www") || url.contains("http://www")
         ? url
@@ -124,7 +124,7 @@ launchURL(String url) async {
   }
 }
 
-void cprint(dynamic data, {String errorIn, String event, String warningIn}) {
+void cprint(dynamic data, {String? errorIn, String? event, String? warningIn}) {
   if (errorIn != null) {
     developer.log('[Error]', time: DateTime.now(), error: data, name: errorIn);
   } else if (data != null) {
@@ -138,10 +138,10 @@ void cprint(dynamic data, {String errorIn, String event, String warningIn}) {
   }
 }
 
-void logEvent(String event, {Map<String, dynamic> parameter}) {
-  kReleaseMode
-      ? kAnalytics.logEvent(name: event, parameters: parameter)
-      : print("[EVENT]: $event");
+void logEvent(String event, {Map<String, dynamic>? parameter}) {
+  // kReleaseMode
+  //     ? kAnalytics.logEvent(name: event, parameters: parameter)
+  //     : print("[EVENT]: $event");
 }
 
 void debugLog(String log, {dynamic param = ""}) {
@@ -149,25 +149,28 @@ void debugLog(String log, {dynamic param = ""}) {
   print("[$time][Log]: $log, $param");
 }
 
-void share(String message, {String subject}) {
-  Share.share(message, subject: subject);
+void share(String message, {String? subject}) {
+  // Share.share(message, subject: subject);
+  SocialShare.shareOptions(message);
 }
 
 List<String> getHashTags(String text) {
   RegExp reg = RegExp(
       r"([#])\w+|(https?|ftp|file|#)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]*");
   Iterable<Match> _matches = reg.allMatches(text);
-  List<String> resultMatches = List<String>();
+  List<String> resultMatches = [];
   for (Match match in _matches) {
-    if (match.group(0).isNotEmpty) {
+    if (match.group(0)!.isNotEmpty) {
       var tag = match.group(0);
-      resultMatches.add(tag);
+      if (tag != null) {
+        resultMatches.add(tag);
+      }
     }
   }
   return resultMatches;
 }
 
-String getUserName({String name, String id}) {
+String getUserName({required String name, required String id}) {
   String userName = '';
   name = name.split(' ')[0];
   id = id.substring(0, 4).toLowerCase();

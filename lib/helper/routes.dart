@@ -48,8 +48,8 @@ class Routes{
     }
   }
 
-  static Route onGenerateRoute(RouteSettings settings) {
-     final List<String> pathElements = settings.name.split('/');
+  static Route? onGenerateRoute(RouteSettings settings) {
+     final List<String> pathElements = settings.name!.split('/');
      if (pathElements[0] != '' || pathElements.length == 1) {
        return null;
      }
@@ -71,12 +71,12 @@ class Routes{
         var postId = pathElements[2];
           return SlideLeftRoute<bool>(builder:(BuildContext context)=> FeedPostDetail(postId: postId,),settings: RouteSettings(name:'FeedPostDetail'));
         case "ProfilePage":
-         String profileId;
+         String? profileId;
          if(pathElements.length > 2){
              profileId = pathElements[2];
          }
         return CustomRoute<bool>(builder:(BuildContext context)=> ProfilePage(
-          profileId: profileId,
+          profileId: profileId ?? "",
         )); 
       case "CreateFeedPage": return CustomRoute<bool>(builder:(BuildContext context)=> ChangeNotifierProvider<ComposeTweetState>(
           create: (_) => ComposeTweetState(),
@@ -119,9 +119,9 @@ class Routes{
    static Route onUnknownRoute(RouteSettings settings){
      return MaterialPageRoute(
           builder: (_) => Scaffold(
-                appBar: AppBar(title: customTitleText(settings.name.split('/')[1]),centerTitle: true,),
+                appBar: AppBar(title: customTitleText(settings.name!.split('/')[1]),centerTitle: true,),
                 body: Center(
-                  child: Text('${settings.name.split('/')[1]} Comming soon..'),
+                  child: Text('${settings.name!.split('/')[1]} Comming soon..'),
                 ),
               ),
         );

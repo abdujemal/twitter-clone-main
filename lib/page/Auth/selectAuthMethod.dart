@@ -5,11 +5,12 @@ import 'package:flutter_twitter_clone/page/Auth/signup.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
+import '../../helper/flatbutton.dart';
 import '../homePage.dart';
 import 'signin.dart';
 
 class WelcomePage extends StatefulWidget {
-  WelcomePage({Key key}) : super(key: key);
+  WelcomePage({Key? key}) : super(key: key);
 
   @override
   _WelcomePageState createState() => _WelcomePageState();
@@ -17,24 +18,22 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
   Widget _submitButton() {
-    return Container(
+    return FlatButton(
+      color: TwitterColor.dodgetBlue,
+      onTap: () {
+        var state = Provider.of<AuthState>(context, listen: false);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Signup(loginCallback: state.getCurrentUser),
+          ),
+        );
+      },
+      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      borderRadius: BorderRadius.circular(30),
       margin: EdgeInsets.symmetric(vertical: 15),
       width: MediaQuery.of(context).size.width,
-      child: FlatButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        color: TwitterColor.dodgetBlue,
-        onPressed: () {
-          var state = Provider.of<AuthState>(context,listen: false);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Signup(loginCallback: state.getCurrentUser),
-            ),
-          );
-        },
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        child: TitleText('Create account', color: Colors.white),
-      ),
+      child: TitleText('Create account', color: Colors.white),
     );
   }
 
@@ -73,7 +72,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 ),
                 InkWell(
                   onTap: () {
-                    var state = Provider.of<AuthState>(context,listen: false);
+                    var state = Provider.of<AuthState>(context, listen: false);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -103,7 +102,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<AuthState>(context,listen: false);
+    var state = Provider.of<AuthState>(context, listen: false);
     return Scaffold(
       body: state.authStatus == AuthStatus.NOT_LOGGED_IN ||
               state.authStatus == AuthStatus.NOT_DETERMINED

@@ -12,11 +12,11 @@ import 'package:flutter_twitter_clone/state/appState.dart';
 
 class NotificationState extends AppState {
   String fcmToken;
-  NotificationType _notificationType = NotificationType.NOT_DETERMINED;
+  NotificationType? _notificationType = NotificationType.NOT_DETERMINED;
   String notificationReciverId, notificationTweetId;
   List<FeedModel> notificationTweetList;
   NotificationType get notificationType => _notificationType;
-  set setNotificationType(NotificationType type) {
+  set setNotificationType(NotificationType? type) {
     _notificationType = type;
   }
 

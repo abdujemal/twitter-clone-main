@@ -14,7 +14,7 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class NotificationPage extends StatefulWidget {
-  NotificationPage({Key key, this.scaffoldKey}) : super(key: key);
+  NotificationPage({Key? key, required this.scaffoldKey}) : super(key: key);
 
   /// scaffoldKey used to open sidebaar drawer
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -55,17 +55,17 @@ class _NotificationPageState extends State<NotificationPage> {
 }
 
 class NotificationPageBody extends StatelessWidget {
-  const NotificationPageBody({Key key}) : super(key: key);
+  const NotificationPageBody({Key? key}) : super(key: key);
 
   Widget _notificationRow(
       BuildContext context, NotificationModel model, bool isFirstNotification) {
     var state = Provider.of<NotificationState>(context);
     return FutureBuilder(
-      future: state.getTweetDetail(model.tweetKey),
+      future: state.getTweetDetail(model.tweetKey ?? ""),
       builder: (BuildContext context, AsyncSnapshot<FeedModel> snapshot) {
         if (snapshot.hasData) {
           return NotificationTile(
-            model: snapshot.data,
+            model: snapshot.data!,
           );
         } else if (isFirstNotification &&
             (snapshot.connectionState == ConnectionState.waiting ||
@@ -105,16 +105,16 @@ class NotificationPageBody extends StatelessWidget {
 
 class NotificationTile extends StatelessWidget {
   final FeedModel model;
-  const NotificationTile({Key key, this.model}) : super(key: key);
-  Widget _userList(BuildContext context, List<String> list) {
+  const NotificationTile({Key? key, required this.model}) : super(key: key);
+  Widget _userList(BuildContext context, List<String>? list) {
     // List<String> names = [];
-    var length = list.length;
-    List<Widget> avaterList = [];
-    final int noOfUser = list.length;
-    var state = Provider.of<NotificationState>(context, listen: false);
     if (list != null && list.length > 5) {
       list = list.take(5).toList();
     }
+    var length = list!.length;
+    List<Widget> avaterList = [];
+    final int noOfUser = list.length;
+    var state = Provider.of<NotificationState>(context, listen: false);
     avaterList = list.map((userId) {
       return _userAvater(userId, state, (name) {
         // names.add(name);
@@ -166,15 +166,16 @@ class NotificationTile extends StatelessWidget {
       //  initialData: InitialData,
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
         if (snapshot.hasData) {
-          name(snapshot.data.displayName);
+          name(snapshot.data!.displayName ?? "");
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 3),
             child: GestureDetector(
               onTap: () {
                 Navigator.of(context)
-                    .pushNamed('/ProfilePage/' + snapshot.data?.userId);
+                    .pushNamed('/ProfilePage/' + snapshot.data!.userId!);
               },
-              child: customImage(context, snapshot.data.profilePic, height: 30),
+              child:
+                  customImage(context, snapshot.data!.profilePic, height: 30),
             ),
           );
         } else {
@@ -186,8 +187,8 @@ class NotificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var description = model.description.length > 150
-        ? model.description.substring(0, 150) + '...'
+    var description = model.description!.length > 150
+        ? model.description!.substring(0, 150) + '...'
         : model.description;
     return Column(
       children: <Widget>[
@@ -198,13 +199,13 @@ class NotificationTile extends StatelessWidget {
             onTap: () {
               var state = Provider.of<FeedState>(context, listen: false);
               state.getpostDetailFromDatabase(null, model: model);
-              Navigator.of(context).pushNamed('/FeedPostDetail/' + model.key);
+              Navigator.of(context).pushNamed('/FeedPostDetail/' + model.key!);
             },
             title: _userList(context, model.likeList),
             subtitle: Padding(
               padding: EdgeInsets.only(left: 60),
               child: UrlText(
-                text: description,
+                text: description ?? "",
                 style: TextStyle(
                   color: AppColor.darkGrey,
                   fontWeight: FontWeight.w400,

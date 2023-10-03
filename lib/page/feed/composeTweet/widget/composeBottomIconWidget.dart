@@ -7,45 +7,48 @@ import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ComposeBottomIconWidget extends StatefulWidget {
-  
-  final TextEditingController textEditingController;
-  final Function(File) onImageIconSelcted;
-  ComposeBottomIconWidget({Key key, this.textEditingController, this.onImageIconSelcted}) : super(key: key);
-  
+  final TextEditingController? textEditingController;
+  final Function(File)? onImageIconSelcted;
+  ComposeBottomIconWidget(
+      {Key? key, this.textEditingController, this.onImageIconSelcted})
+      : super(key: key);
+
   @override
-  _ComposeBottomIconWidgetState createState() => _ComposeBottomIconWidgetState();
+  _ComposeBottomIconWidgetState createState() =>
+      _ComposeBottomIconWidgetState();
 }
 
 class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
+  bool reachToWarning = false;
+  bool reachToOver = false;
+  Color? wordCountColor;
+  String? tweet = '';
 
- bool reachToWarning = false;
- bool reachToOver = false;
- Color wordCountColor;
- String tweet = '';
- 
- @override
- void initState() { 
-   wordCountColor = Colors.blue;
-   widget.textEditingController.addListener(updateUI);
-   super.initState();
- }
- void updateUI(){
-   setState(() {
-     tweet = widget.textEditingController.text;
-     if (widget.textEditingController.text != null &&
-          widget.textEditingController.text.isNotEmpty) {
-            if (widget.textEditingController.text.length > 259 &&
-                widget.textEditingController.text.length < 280) {
-              wordCountColor = Colors.orange;
-            } else if (widget.textEditingController.text.length >= 280) {
-              wordCountColor = Theme.of(context).errorColor;
-            } else {
-              wordCountColor = Colors.blue;
-            }
-           }
-   });
- }
- Widget _bottomIconWidget() {
+  @override
+  void initState() {
+    wordCountColor = Colors.blue;
+    widget.textEditingController!.addListener(updateUI);
+    super.initState();
+  }
+
+  void updateUI() {
+    setState(() {
+      tweet = widget.textEditingController!.text;
+      if (widget.textEditingController!.text != null &&
+          widget.textEditingController!.text.isNotEmpty) {
+        if (widget.textEditingController!.text.length > 259 &&
+            widget.textEditingController!.text.length < 280) {
+          wordCountColor = Colors.orange;
+        } else if (widget.textEditingController!.text.length >= 280) {
+          wordCountColor = Theme.of(context).errorColor;
+        } else {
+          wordCountColor = Colors.blue;
+        }
+      }
+    });
+  }
+
+  Widget _bottomIconWidget() {
     return Container(
       width: fullWidth(context),
       height: 50,
@@ -76,12 +79,10 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
             alignment: Alignment.centerRight,
             child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                child: tweet != null &&
-                        tweet.length > 289
+                child: tweet != null && tweet!.length > 289
                     ? Padding(
                         padding: EdgeInsets.only(right: 10),
-                        child: customText(
-                            '${280 - tweet.length}',
+                        child: customText('${280 - tweet!.length}',
                             style:
                                 TextStyle(color: Theme.of(context).errorColor)),
                       )
@@ -91,12 +92,11 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
                           CircularProgressIndicator(
                             value: getTweetLimit(),
                             backgroundColor: Colors.grey,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(wordCountColor),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                wordCountColor ?? Colors.blue),
                           ),
-                          tweet.length > 259
-                              ? customText(
-                                  '${280 - tweet.length}',
+                          tweet!.length > 259
+                              ? customText('${280 - tweet!.length}',
                                   style: TextStyle(color: wordCountColor))
                               : customText('',
                                   style: TextStyle(color: wordCountColor))
@@ -107,23 +107,28 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
       ),
     );
   }
+
   void setImage(ImageSource source) {
-    ImagePicker.pickImage(source: source, imageQuality: 20).then((File file) {
+    ImagePicker().pickImage(source: source, imageQuality: 20).then((XFile? file) {
       setState(() {
         // _image = file;
-        widget.onImageIconSelcted(file);
+        if (file != null) {
+          widget.onImageIconSelcted!(File(file.path));
+        } else {
+          print("Nothing is selected");
+        }
       });
     });
   }
+
   double getTweetLimit() {
-    if (tweet == null ||
-        tweet.isEmpty) {
+    if (tweet == null || tweet!.isEmpty) {
       return 0.0;
     }
-    if (tweet.length > 280) {
+    if (tweet!.length > 280) {
       return 1.0;
     }
-    var length = tweet.length;
+    var length = tweet!.length;
     var val = length * 100 / 28000.0;
     return val;
   }
@@ -131,7 +136,7 @@ class _ComposeBottomIconWidgetState extends State<ComposeBottomIconWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-       child: _bottomIconWidget(),
+      child: _bottomIconWidget(),
     );
   }
 }

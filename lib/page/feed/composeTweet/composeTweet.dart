@@ -20,7 +20,7 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class ComposeTweetPage extends StatefulWidget {
-  ComposeTweetPage({Key key, this.isRetweet, this.isTweet = true})
+  ComposeTweetPage({Key? key, required this.isRetweet, this.isTweet = true})
       : super(key: key);
 
   final bool isRetweet;
@@ -30,11 +30,11 @@ class ComposeTweetPage extends StatefulWidget {
 
 class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
   bool isScrollingDown = false;
-  FeedModel model;
-  ScrollController scrollcontroller;
+  late FeedModel model;
+  late ScrollController scrollcontroller;
 
-  File _image;
-  TextEditingController _textEditingController;
+  File? _image;
+  late TextEditingController _textEditingController;
 
   @override
   void dispose() {
@@ -82,7 +82,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
 
   /// Submit tweet to save in firebase database
   void _submitButton() async {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     if (_textEditingController.text == null ||
         _textEditingController.text.isEmpty ||
         _textEditingController.text.length > 280) {
@@ -98,7 +98,7 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     /// After sucessfull image upload to firebase storage it returns image path
     /// Add this image path to tweet model and save to firebase database
     if (_image != null) {
-      await state.uploadFile(_image).then((imagePath) {
+      await state.uploadFile(_image!).then((imagePath) {
         if (imagePath != null) {
           tweetModel.imagePath = imagePath;
 
@@ -161,13 +161,13 @@ class _ComposeTweetReplyPageState extends State<ComposeTweetPage> {
     var state = Provider.of<FeedState>(context, listen: false);
     var authState = Provider.of<AuthState>(context, listen: false);
     var myUser = authState.userModel;
-    var profilePic = myUser.profilePic ?? dummyProfilePic;
+    var profilePic = myUser!.profilePic ?? dummyProfilePic;
     var commentedUser = UserModel(
-        displayName: myUser.displayName ?? myUser.email.split('@')[0],
+        displayName: myUser.displayName ?? myUser.email!.split('@')[0],
         profilePic: profilePic,
         userId: myUser.userId,
-        isVerified: authState.userModel.isVerified,
-        userName: authState.userModel.userName);
+        isVerified: authState.userModel!.isVerified == true,
+        userName: authState.userModel!.userName?? "");
     var tags = getHashTags(_textEditingController.text);
     FeedModel reply = FeedModel(
         description: _textEditingController.text,
@@ -253,19 +253,19 @@ class _ComposeRetweet
                   Container(
                     width: 25,
                     height: 25,
-                    child: customImage(context, model.user.profilePic),
+                    child: customImage(context, model.user!.profilePic ?? ""),
                   ),
                   SizedBox(width: 10),
                   ConstrainedBox(
                     constraints: BoxConstraints(
                         minWidth: 0, maxWidth: fullWidth(context) * .5),
-                    child: TitleText(model.user.displayName,
+                    child: TitleText(model.user!.displayName ?? "",
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
                         overflow: TextOverflow.ellipsis),
                   ),
                   SizedBox(width: 3),
-                  model.user.isVerified
+                  model.user!.isVerified == true
                       ? customIcon(
                           context,
                           icon: AppIcon.blueTick,
@@ -275,10 +275,10 @@ class _ComposeRetweet
                           paddingIcon: 3,
                         )
                       : SizedBox(width: 0),
-                  SizedBox(width: model.user.isVerified ? 5 : 0),
+                  SizedBox(width: model.user!.isVerified == true ? 5 : 0),
                   Flexible(
                     child: customText(
-                      '${model.user.userName}',
+                      '${model.user!.userName}',
                       style: userNameStyle,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -293,7 +293,7 @@ class _ComposeRetweet
           ),
         ),
         UrlText(
-          text: model.description,
+          text: model.description ?? "",
           style: TextStyle(
             color: Colors.black,
             fontSize: 14,
@@ -318,7 +318,7 @@ class _ComposeRetweet
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child:
-                    customImage(context, authState.user?.photoURL, height: 40),
+                    customImage(context, authState.user.photoURL ?? "", height: 40),
               ),
               Expanded(
                 child: _TextField(
@@ -357,7 +357,7 @@ class _ComposeRetweet
                   ],
                 ),
                 _UserList(
-                  list: Provider.of<SearchState>(context).userlist,
+                  list: Provider.of<SearchState>(context).userlist!,
                   textEditingController: viewState._textEditingController,
                 )
               ],
@@ -416,7 +416,7 @@ class _ComposeTweet
                   SizedBox(height: 30),
                   UrlText(
                     text:
-                        'Replying to ${viewState.model.user.userName ?? viewState.model.user.displayName}',
+                        'Replying to ${viewState.model.user!.userName ?? viewState.model.user!.displayName ?? "Nan"}',
                     style: TextStyle(
                       color: TwitterColor.paleSky,
                       fontSize: 13,
@@ -429,19 +429,19 @@ class _ComposeTweet
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                customImage(context, viewState.model.user.profilePic,
+                customImage(context, viewState.model.user!.profilePic,
                     height: 40),
                 SizedBox(width: 10),
                 ConstrainedBox(
                   constraints: BoxConstraints(
                       minWidth: 0, maxWidth: fullWidth(context) * .5),
-                  child: TitleText(viewState.model.user.displayName,
+                  child: TitleText(viewState.model.user!.displayName ?? "Nan",
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
                       overflow: TextOverflow.ellipsis),
                 ),
                 SizedBox(width: 3),
-                viewState.model.user.isVerified
+                viewState.model.user!.isVerified == true
                     ? customIcon(
                         context,
                         icon: AppIcon.blueTick,
@@ -451,8 +451,8 @@ class _ComposeTweet
                         paddingIcon: 3,
                       )
                     : SizedBox(width: 0),
-                SizedBox(width: viewState.model.user.isVerified ? 5 : 0),
-                customText('${viewState.model.user.userName}',
+                SizedBox(width: viewState.model.user!.isVerified == true ? 5 : 0),
+                customText('${viewState.model.user!.userName}',
                     style: userNameStyle.copyWith(fontSize: 15)),
                 SizedBox(width: 5),
                 Padding(
@@ -482,7 +482,7 @@ class _ComposeTweet
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              customImage(context, authState.user?.photoURL, height: 40),
+              customImage(context, authState.user.photoURL, height: 40),
               SizedBox(
                 width: 10,
               ),
@@ -502,7 +502,7 @@ class _ComposeTweet
                   onCrossIconPressed: viewState._onCrossIconPressed,
                 ),
                 _UserList(
-                  list: Provider.of<SearchState>(context).userlist,
+                  list: Provider.of<SearchState>(context).userlist!,
                   textEditingController: viewState._textEditingController,
                 )
               ],
@@ -516,8 +516,8 @@ class _ComposeTweet
 
 class _TextField extends StatelessWidget {
   const _TextField(
-      {Key key,
-      this.textEditingController,
+      {Key? key,
+      required this.textEditingController,
       this.isTweet = false,
       this.isRetweet = false})
       : super(key: key);
@@ -553,7 +553,7 @@ class _TextField extends StatelessWidget {
 }
 
 class _UserList extends StatelessWidget {
-  const _UserList({Key key, this.list, this.textEditingController})
+  const _UserList({Key? key, required this.list, required this.textEditingController})
       : super(key: key);
   final List<UserModel> list;
   final TextEditingController textEditingController;
@@ -578,7 +578,7 @@ class _UserList extends StatelessWidget {
                   onUserSelected: (user) {
                     textEditingController.text =
                         Provider.of<ComposeTweetState>(context, listen: false)
-                            .getDescription(user.userName);
+                            .getDescription(user.userName ?? "Nan");
                     textEditingController.selection = TextSelection.collapsed(
                         offset: textEditingController.text.length);
                     Provider.of<ComposeTweetState>(context, listen: false)
@@ -592,7 +592,7 @@ class _UserList extends StatelessWidget {
 }
 
 class _UserTile extends StatelessWidget {
-  const _UserTile({Key key, this.user, this.onUserSelected}) : super(key: key);
+  const _UserTile({Key? key, required this.user, required this.onUserSelected}) : super(key: key);
   final UserModel user;
   final ValueChanged<UserModel> onUserSelected;
 
@@ -608,13 +608,13 @@ class _UserTile extends StatelessWidget {
           ConstrainedBox(
             constraints:
                 BoxConstraints(minWidth: 0, maxWidth: fullWidth(context) * .5),
-            child: TitleText(user.displayName,
+            child: TitleText(user.displayName ?? "Nan",
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
                 overflow: TextOverflow.ellipsis),
           ),
           SizedBox(width: 3),
-          user.isVerified
+          user.isVerified == true
               ? customIcon(
                   context,
                   icon: AppIcon.blueTick,
@@ -626,7 +626,7 @@ class _UserTile extends StatelessWidget {
               : SizedBox(width: 0),
         ],
       ),
-      subtitle: Text(user.userName),
+      subtitle: Text(user.userName ?? "Nan"),
     );
   }
 }

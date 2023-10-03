@@ -15,9 +15,9 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class ChatListPage extends StatefulWidget {
-  final GlobalKey<ScaffoldState> scaffoldKey;
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
-  const ChatListPage({Key key, this.scaffoldKey}) : super(key: key);
+  const ChatListPage({Key? key, this.scaffoldKey}) : super(key: key);
   _ChatListPageState createState() => _ChatListPageState();
 }
 
@@ -48,13 +48,13 @@ class _ChatListPageState extends State<ChatListPage> {
     } else {
       return ListView.separated(
         physics: BouncingScrollPhysics(),
-        itemCount: state.chatUserList.length,
+        itemCount: state.chatUserList!.length,
         itemBuilder: (context, index) => _userCard(
-            searchState.userlist.firstWhere(
-              (x) => x.userId == state.chatUserList[index].key,
+            searchState.userlist!.firstWhere(
+              (x) => x.userId == state.chatUserList![index].key,
               orElse: () => UserModel(userName: "Unknown"),
             ),
-            state.chatUserList[index]),
+            state.chatUserList![index]),
         separatorBuilder: (context, index) {
           return Divider(
             height: 0,
@@ -64,7 +64,7 @@ class _ChatListPageState extends State<ChatListPage> {
     }
   }
 
-  Widget _userCard(UserModel model, ChatMessage lastMessage) {
+  Widget _userCard(UserModel model, ChatMessage? lastMessage) {
     return Container(
       color: Colors.white,
       child: ListTile(
@@ -73,8 +73,8 @@ class _ChatListPageState extends State<ChatListPage> {
           final chatState = Provider.of<ChatUserState>(context, listen: false);
           final searchState = Provider.of<SearchState>(context, listen: false);
           chatState.setChatUser = model;
-          if (searchState.userlist.any((x) => x.userId == model.userId)) {
-            chatState.setChatUser = searchState.userlist
+          if (searchState.userlist!.any((x) => x.userId == model.userId)) {
+            chatState.setChatUser = searchState.userlist!
                 .where((x) => x.userId == model.userId)
                 .first;
           }
@@ -104,13 +104,13 @@ class _ChatListPageState extends State<ChatListPage> {
             ConstrainedBox(
               constraints: BoxConstraints(
                   minWidth: 0, maxWidth: fullWidth(context) * .5),
-              child: TitleText(model.displayName,
+              child: TitleText(model.displayName?? "",
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
                   overflow: TextOverflow.ellipsis),
             ),
             SizedBox(width: 3),
-            model.isVerified
+            model.isVerified == true
                 ? customIcon(
                     context,
                     icon: AppIcon.blueTick,
@@ -121,7 +121,7 @@ class _ChatListPageState extends State<ChatListPage> {
                   )
                 : SizedBox(width: 0),
             SizedBox(
-              width: model.isVerified ? 5 : 0,
+              width: model.isVerified == true ? 5 : 0,
             ),
             customText('${model.userName}', style: userNameStyle),
             Spacer(),
@@ -136,7 +136,7 @@ class _ChatListPageState extends State<ChatListPage> {
           ],
         ),
         subtitle: TitleText(
-          trimMessage(lastMessage.message) ?? '@${model.displayName}',
+          trimMessage(lastMessage!.message) ?? '@${model.displayName}',
           color: AppColor.darkGrey,
           fontWeight: FontWeight.w500,
           fontSize: 14,
@@ -173,7 +173,7 @@ class _ChatListPageState extends State<ChatListPage> {
     Navigator.pushNamed(context, '/DirectMessagesPage');
   }
 
-  String trimMessage(String message) {
+  String? trimMessage(String? message) {
     if (message != null && message.isNotEmpty) {
       if (message.length > 70) {
         message = message.substring(0, 70) + '...';
@@ -189,7 +189,7 @@ class _ChatListPageState extends State<ChatListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        scaffoldKey: widget.scaffoldKey,
+        scaffoldKey: widget.scaffoldKey!,
         title: customTitleText(
           'Messages',
         ),

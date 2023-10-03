@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:http/http.dart' as http;
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:flutter_twitter_clone/model/feedModel.dart';
@@ -13,7 +12,7 @@ class ComposeTweetState extends ChangeNotifier {
   bool enableSubmitButton = false;
   bool hideUserList = false;
   String description = "";
-  String serverToken;
+  String? serverToken;
   final usernameRegex = r'(@\w*[a-zA-Z1-9]$)';
 
   bool _isScrollingDown = false;
@@ -113,19 +112,19 @@ class ComposeTweetState extends ChangeNotifier {
   /// For package detail check:-  https://pub.dev/packages/firebase_remote_config#-readme-tab-
   Future<Null> getFCMServerKey() async {
     /// If FCM server key is already fetched then no need to fetch it again.
-    if (serverToken != null && serverToken.isNotEmpty) {
-      return Future.value(null);
-    }
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    await remoteConfig.fetch(expiration: const Duration(hours: 5));
-    await remoteConfig.activateFetched();
-    var data = remoteConfig.getString('FcmServerKey');
-    if (data != null && data.isNotEmpty) {
-      serverToken = jsonDecode(data)["key"];
-    } else {
-      cprint("Please configure Remote config in firebase",
-          errorIn: "getFCMServerKey");
-    }
+    // if (serverToken != null && serverToken!.isNotEmpty) {
+    //   return Future.value(null);
+    // }
+    // final RemoteConfigValue remoteConfig = await RemoteConfig.instance;
+    // await remoteConfig.fetch(expiration: const Duration(hours: 5));
+    // await remoteConfig.activateFetched();
+    // var data = remoteConfig.getString('FcmServerKey');
+    // if (data != null && data.isNotEmpty) {
+    //   serverToken = jsonDecode(data)["key"];
+    // } else {
+    //   cprint("Please configure Remote config in firebase",
+    //       errorIn: "getFCMServerKey");
+    // }
   }
 
   /// Fecth FCM server key from firebase Remote config
@@ -153,10 +152,10 @@ class ComposeTweetState extends ChangeNotifier {
         /// Send notification to user one by one
         await Future.forEach(_matches, (Match match) async {
           var name = description.substring(match.start, match.end);
-          if (state.userlist.any((x) => x.userName == name)) {
+          if (state.userlist!.any((x) => x.userName == name)) {
             /// Fetch user model from userlist
             /// UserId, FCMtoken is needed to send notification
-            final user = state.userlist.firstWhere((x) => x.userName == name);
+            final user = state.userlist!.firstWhere((x) => x.userName == name);
             await sendNotificationToUser(model, user);
           } else {
             cprint("Name: $name ,", errorIn: "UserNot found");
@@ -179,7 +178,7 @@ class ComposeTweetState extends ChangeNotifier {
     var body = jsonEncode(<String, dynamic>{
       'notification': <String, dynamic>{
         'body': model.description,
-        'title': "${model.user.displayName} metioned you in a tweet"
+        'title': "${model.user!.displayName} metioned you in a tweet"
       },
       'priority': 'high',
       'data': <String, dynamic>{
@@ -187,7 +186,7 @@ class ComposeTweetState extends ChangeNotifier {
         'id': '1',
         'status': 'done',
         "type": NotificationType.Mention.toString(),
-        "senderId": model.user.userId,
+        "senderId": model.user!.userId,
         "receiverId": user.userId,
         "title": "title",
         "body": "",
@@ -197,7 +196,7 @@ class ComposeTweetState extends ChangeNotifier {
     });
 
     var response = await http.post(
-      'https://fcm.googleapis.com/fcm/send',
+      Uri.parse('https://fcm.googleapis.com/fcm/send'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'key=$serverToken',

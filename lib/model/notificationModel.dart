@@ -1,7 +1,7 @@
 class NotificationModel {
-  String tweetKey;
-  String updatedAt;
-  String type;
+  String? tweetKey;
+  String? updatedAt;
+  String? type;
 
   NotificationModel({
     this.tweetKey,

@@ -7,7 +7,7 @@ import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 
 class AccessibilityPage extends StatelessWidget {
-  const AccessibilityPage({Key key}) : super(key: key);
+  const AccessibilityPage({Key? key}) : super(key: key);
 
   void openBottomSheet(
     BuildContext context,

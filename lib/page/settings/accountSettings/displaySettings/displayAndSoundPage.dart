@@ -7,7 +7,7 @@ import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 
 class DisplayAndSoundPage extends StatelessWidget {
-  const DisplayAndSoundPage({Key key}) : super(key: key);
+  const DisplayAndSoundPage({Key? key}) : super(key: key);
 
   void openBottomSheet(
     BuildContext context,

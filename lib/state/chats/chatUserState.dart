@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_twitter_clone/helper/constant.dart';
 import 'package:flutter_twitter_clone/helper/enum.dart';
 import 'package:http/http.dart' as http;
@@ -11,34 +10,32 @@ import 'package:flutter_twitter_clone/helper/utility.dart';
 import 'package:flutter_twitter_clone/model/user.dart';
 import 'package:flutter_twitter_clone/state/appState.dart';
 
-import '../../helper/utility.dart';
-
 class ChatUserState extends AppState {
-  bool setIsChatScreenOpen;
+  bool? setIsChatScreenOpen;
   // final FirebaseDatabase _database = FirebaseDatabase.instance;
 
-  List<ChatMessage> _chatUserList;
-  UserModel _chatUser;
+  List<ChatMessage>? _chatUserList;
+  UserModel? _chatUser;
   String serverToken = "<FCM SERVER KEY>";
-  StreamSubscription<QuerySnapshot> _userListSubscription;
+  StreamSubscription<QuerySnapshot>? _userListSubscription;
 
   static final CollectionReference _userCollection =
       kfirestore.collection(USERS_COLLECTION);
 
   /// Get FCM server key from firebase project settings
-  UserModel get chatUser => _chatUser;
+  UserModel? get chatUser => _chatUser;
   set setChatUser(UserModel model) {
     _chatUser = model;
   }
 
-  String _channelName;
+  String? _channelName;
   // Query messageQuery;
 
-  List<ChatMessage> get chatUserList {
+  List<ChatMessage>? get chatUserList {
     if (_chatUserList == null) {
       return null;
     } else {
-      return List.from(_chatUserList);
+      return List.from(_chatUserList!);
     }
   }
 
@@ -83,23 +80,23 @@ class ChatUserState extends AppState {
   /// For more detail visit:- https://github.com/TheAlphamerc/flutter_twitter_clone/issues/28#issue-611695533
   /// For package detail check:-  https://pub.dev/packages/firebase_remote_config#-readme-tab-
   void getFCMServerKey() async {
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    await remoteConfig.fetch(expiration: const Duration(hours: 5));
-    await remoteConfig.activateFetched();
-    var data = remoteConfig.getString('FcmServerKey');
-    if (data != null && data.isNotEmpty) {
-      serverToken = jsonDecode(data)["key"];
-    } else {
-      cprint("Please configure Remote config in firebase",
-          errorIn: "getFCMServerKey");
-    }
+    // final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    // await remoteConfig.fetch(expiration: const Duration(hours: 5));
+    // await remoteConfig.activateFetched();
+    // var data = remoteConfig.getString('FcmServerKey');
+    // if (data != null && data.isNotEmpty) {
+    //   serverToken = jsonDecode(data)["key"];
+    // } else {
+    //   cprint("Please configure Remote config in firebase",
+    //       errorIn: "getFCMServerKey");
+    // }
   }
 
   /// Fetch users list to who have ever engaged in chat message with logged-in user
   void getUserchatList(String userId) async {
     try {
       // _userListCollection.doc(userId).get()
-      _chatUserList = List<ChatMessage>();
+      _chatUserList = <ChatMessage>[];
 
       await _userCollection
           .doc(userId)
@@ -108,10 +105,10 @@ class ChatUserState extends AppState {
           .then((QuerySnapshot querySnapshot) {
         if (querySnapshot != null && querySnapshot.docs.isNotEmpty) {
           for (var i = 0; i < querySnapshot.docs.length; i++) {
-            final model = ChatMessage.fromJson(
-                querySnapshot.docs[i].data()["lastMessage"]);
+            final ds = querySnapshot.docs[i].data() as Map ?? {};
+            final model = ChatMessage.fromJson(ds["lastMessage"]);
             model.key = querySnapshot.docs[i].id;
-            _chatUserList.add(model);
+            _chatUserList!.add(model);
           }
           // _userlist.addAll(_userFilterlist);
           // _userFilterlist.sort((x, y) => y.followers.compareTo(x.followers));
@@ -146,8 +143,8 @@ class ChatUserState extends AppState {
   }
 
   void onMessageSubmitted(ChatMessage message,
-      {UserModel myUser, UserModel secondUser}) {
-    print(chatUser.userId);
+      {required UserModel myUser, required UserModel secondUser}) {
+    // print(chatUser!.userId);
     try {
       // if (_messageList == null || _messageList.length < 1) {
       // kfirestore.doc(message.senderId).set({"receiver":message.receiverId, "lastMessage":message.toJson()});
@@ -194,7 +191,7 @@ class ChatUserState extends AppState {
     }
   }
 
-  String getChannelName(String user1, String user2) {
+  String? getChannelName(String user1, String user2) {
     user1 = user1.substring(0, 5);
     user2 = user2.substring(0, 5);
     List<String> list = [user1, user2];
@@ -204,17 +201,17 @@ class ChatUserState extends AppState {
     return _channelName;
   }
 
-  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   void sendAndRetrieveMessage(ChatMessage model) async {
     /// on noti
-    await firebaseMessaging.requestNotificationPermissions(
-      const IosNotificationSettings(
-          sound: true, badge: true, alert: true, provisional: false),
-    );
-    if (chatUser.fcmToken == null) {
-      return;
-    }
+    // await firebaseMessaging.requestNotificationPermissions(
+    //   const IosNotificationSettings(
+    //       sound: true, badge: true, alert: true, provisional: false),
+    // );
+    // if (chatUser.fcmToken == null) {
+    //   return;
+    // }
 
     var body = jsonEncode(<String, dynamic>{
       'notification': <String, dynamic>{
@@ -233,9 +230,9 @@ class ChatUserState extends AppState {
         "body": model.message,
         "tweetId": ""
       },
-      'to': chatUser.fcmToken
+      'to': chatUser!.fcmToken
     });
-    var response = await http.post('https://fcm.googleapis.com/fcm/send',
+    var response = await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Authorization': 'key=$serverToken',
@@ -246,40 +243,36 @@ class ChatUserState extends AppState {
 
   void _onChatUserUpdated(DocumentSnapshot snapshot) {
     if (_chatUserList == null) {
-      _chatUserList = List<ChatMessage>();
+      _chatUserList = <ChatMessage>[];
     }
     if (snapshot.data != null) {
-      var map = snapshot.data();
-      if (map != null) {
-        var model = ChatMessage.fromJson(map["lastMessage"]);
-        model.key = snapshot.id;
-        if (_chatUserList.length > 0 &&
-            _chatUserList.any((x) => x.key == model.key)) {
-          final index = _chatUserList.indexWhere((x) => x.key == model.key);
-          _chatUserList[index] = model;
-          cprint("chat user updated1" + model.message);
-          notifyListeners();
-        }
+      var map = (snapshot.data()?? {}) as Map;
+      var model = ChatMessage.fromJson(map["lastMessage"]);
+      model.key = snapshot.id;
+      if (_chatUserList!.length > 0 &&
+          _chatUserList!.any((x) => x.key == model.key)) {
+        final index = _chatUserList!.indexWhere((x) => x.key == model.key);
+        _chatUserList![index] = model;
+        cprint("chat user updated1" + model.message);
+        notifyListeners();
       }
     }
   }
 
   void _onChatUserAdded(DocumentSnapshot snapshot) {
     if (_chatUserList == null) {
-      _chatUserList = List<ChatMessage>();
+      _chatUserList = <ChatMessage>[];
     }
-    if (snapshot.data != null) {
-      var map = snapshot.data();
-      if (map != null) {
-        var model = ChatMessage.fromJson(map);
-        model.key = snapshot.id;
-        if (_chatUserList.length > 0 &&
-            _chatUserList.any((x) => x.key == model.key)) {
-          return;
-        }
-        _chatUserList.add(model);
-        cprint("New chat user added");
+    if (snapshot.exists) {
+      var map = (snapshot.data()?? {}) as Map;
+      var model = ChatMessage.fromJson(map);
+      model.key = snapshot.id;
+      if (_chatUserList!.length > 0 &&
+          _chatUserList!.any((x) => x.key == model.key)) {
+        return;
       }
+      _chatUserList!.add(model);
+      cprint("New chat user added");
     } else {
       _chatUserList = null;
     }

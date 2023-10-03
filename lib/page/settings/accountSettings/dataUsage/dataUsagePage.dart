@@ -7,7 +7,7 @@ import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 
 class DataUsagePage extends StatelessWidget {
-  const DataUsagePage({Key key}) : super(key: key);
+  const DataUsagePage({Key? key}) : super(key: key);
 
   void openBottomSheet(
     BuildContext context,

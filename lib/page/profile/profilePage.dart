@@ -19,9 +19,9 @@ import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetBottomSheet.dar
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key key, this.profileId}) : super(key: key);
+  ProfilePage({Key? key, this.profileId}) : super(key: key);
 
-  final String profileId;
+  final String? profileId;
 
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -35,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage>
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var authstate = Provider.of<AuthState>(context, listen: false);
-      authstate.getProfileUser(userProfileId: widget.profileId);
+      authstate.getProfileUser(userProfileId: widget.profileId ?? "");
       isMyProfile =
           widget.profileId == null || widget.profileId == authstate.userId;
     });
@@ -264,9 +264,9 @@ class _ProfilePageState extends State<ProfilePage>
   isFollower() {
     var authstate = Provider.of<AuthState>(context, listen: false);
     if (authstate.profileUserModel.followersList != null &&
-        authstate.profileUserModel.followersList.isNotEmpty) {
-      return (authstate.profileUserModel.followersList
-          .any((x) => x == authstate.userModel.userId));
+        authstate.profileUserModel.followersList!.isNotEmpty) {
+      return (authstate.profileUserModel.followersList!
+          .any((x) => x == authstate.userModel!.userId));
     } else {
       return false;
     }
@@ -283,18 +283,18 @@ class _ProfilePageState extends State<ProfilePage>
     return true;
   }
 
-  TabController _tabController;
+  late TabController _tabController;
 
   @override
   build(BuildContext context) {
     var state = Provider.of<FeedState>(context);
     var authstate = Provider.of<AuthState>(context);
-    List<FeedModel> list;
+    List<FeedModel>? list;
     String id = widget.profileId ?? authstate.userId;
 
     /// Filter user's tweet among all tweets available in home page tweets list
-    if (state.feedlist != null && state.feedlist.length > 0) {
-      list = state.feedlist.where((x) => x.userId == id).toList();
+    if (state.feedlist != null && state.feedlist!.length > 0) {
+      list = state.feedlist!.where((x) => x.userId == id).toList();
     }
     return WillPopScope(
       onWillPop: _onWillPop,
@@ -358,8 +358,8 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget _tweetList(BuildContext context, AuthState authstate,
-      List<FeedModel> tweetsList, bool isreply, bool isMedia) {
-    List<FeedModel> list;
+      List<FeedModel>? tweetsList, bool isreply, bool isMedia) {
+    List<FeedModel>? list;
 
     /// If user hasn't tweeted yet
     if (tweetsList == null) {
@@ -415,7 +415,7 @@ class _ProfilePageState extends State<ProfilePage>
                 itemBuilder: (context, index) => Container(
                   color: TwitterColor.white,
                   child: Tweet(
-                    model: list[index],
+                    model: list![index],
                     isDisplayOnProfile: true,
                     trailing: TweetBottomSheet().tweetOptionIcon(
                       context,
@@ -430,9 +430,9 @@ class _ProfilePageState extends State<ProfilePage>
 
 class UserNameRowWidget extends StatelessWidget {
   const UserNameRowWidget({
-    Key key,
-    @required this.user,
-    @required this.isMyProfile,
+    Key? key,
+    required this.user,
+    required this.isMyProfile,
   }) : super(key: key);
 
   final bool isMyProfile;
@@ -482,7 +482,7 @@ class UserNameRowWidget extends StatelessWidget {
           child: Row(
             children: <Widget>[
               UrlText(
-                text: user.displayName,
+                text: user.displayName ?? "",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 16,
@@ -492,7 +492,7 @@ class UserNameRowWidget extends StatelessWidget {
               SizedBox(
                 width: 3,
               ),
-              user.isVerified
+              user.isVerified ==true
                   ? customIcon(context,
                       icon: AppIcon.blueTick,
                       istwitterIcon: true,
@@ -513,7 +513,7 @@ class UserNameRowWidget extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: customText(
-            getBio(user.bio),
+            getBio(user.bio ?? ""),
           ),
         ),
         Padding(
@@ -530,7 +530,7 @@ class UserNameRowWidget extends StatelessWidget {
               SizedBox(width: 10),
               Expanded(
                 child: customText(
-                  user.location,
+                  user.location ?? "",
                   style: TextStyle(color: AppColor.darkGrey),
                 ),
               )
@@ -549,7 +549,7 @@ class UserNameRowWidget extends StatelessWidget {
                   iconColor: AppColor.darkGrey),
               SizedBox(width: 10),
               customText(
-                getJoiningDate(user.createdAt),
+                getJoiningDate(user.createdAt ?? ""),
                 style: TextStyle(color: AppColor.darkGrey),
               ),
             ],
@@ -577,7 +577,7 @@ class UserNameRowWidget extends StatelessWidget {
 }
 
 class Choice {
-  const Choice({this.title, this.icon});
+  const Choice({required this.title, required this.icon});
 
   final IconData icon;
   final String title;
@@ -592,13 +592,13 @@ const List<Choice> choices = const <Choice>[
 ];
 
 class ChoiceCard extends StatelessWidget {
-  const ChoiceCard({Key key, this.choice}) : super(key: key);
+  const ChoiceCard({Key? key, required this.choice}) : super(key: key);
 
   final Choice choice;
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle textStyle = Theme.of(context).textTheme.headline4;
+    final TextStyle? textStyle = Theme.of(context).textTheme.headline4;
     return Card(
       color: Colors.white,
       child: Center(
@@ -606,7 +606,7 @@ class ChoiceCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Icon(choice.icon, size: 128.0, color: textStyle.color),
+            Icon(choice.icon, size: 128.0, color: textStyle!.color),
             Text(choice.title, style: textStyle),
           ],
         ),

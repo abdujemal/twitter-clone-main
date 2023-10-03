@@ -8,11 +8,11 @@ import 'appState.dart';
 
 class SearchState extends AppState {
   bool isBusy = false;
-  SortUser sortBy = SortUser.ByMaxFollower;
+  SortUser? sortBy = SortUser.ByMaxFollower;
   List<UserModel> _userFilterlist;
   List<UserModel> _userlist;
 
-  List<UserModel> get userlist {
+  List<UserModel>? get userlist {
     if (_userFilterlist == null) {
       return null;
     } else {
@@ -110,7 +110,7 @@ class SearchState extends AppState {
   }
 
   /// Sort user list on search user page.
-  set updateUserSortPrefrence(SortUser val) {
+  set updateUserSortPrefrence(SortUser? val) {
     sortBy = val;
     notifyListeners();
   }
@@ -153,7 +153,7 @@ class SearchState extends AppState {
   /// Return user list relative to provided `userIds`
   /// Method is used on
   List<UserModel> userList = [];
-  List<UserModel> getuserDetail(List<String> userIds) {
+  List<UserModel>? getuserDetail(List<String> userIds) {
     final list = _userlist.where((x) {
       if (userIds.contains(x.key)) {
         return true;

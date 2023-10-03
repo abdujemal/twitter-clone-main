@@ -17,8 +17,8 @@ class ImageViewPge extends StatefulWidget {
 class _ImageViewPgeState extends State<ImageViewPge> {
   bool isToolAvailable = true;
 
-  FocusNode _focusNode;
-  TextEditingController _textEditingController;
+  late FocusNode? _focusNode;
+  late TextEditingController? _textEditingController;
 
   @override
   void initState() {
@@ -140,7 +140,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
     );
   }
 
-  Widget _imageFeed(String _image) {
+  Widget _imageFeed(String? _image) {
     return _image == null
         ? Container()
         : Container(
@@ -161,36 +161,36 @@ class _ImageViewPgeState extends State<ImageViewPge> {
   }
 
   void _submitButton() {
-    if (_textEditingController.text == null ||
-        _textEditingController.text.isEmpty) {
+    if (_textEditingController == null ||
+        _textEditingController!.text.isEmpty) {
       return;
     }
-    if (_textEditingController.text.length > 280) {
+    if (_textEditingController!.text.length > 280) {
       return;
     }
     var state = Provider.of<FeedState>(context, listen: false);
     var authState = Provider.of<AuthState>(context, listen: false);
     var user = authState.userModel;
-    var profilePic = user.profilePic;
+    var profilePic = user!.profilePic;
     if (profilePic == null) {
       profilePic = dummyProfilePic;
     }
-    var name = authState.userModel.displayName ??
-        authState.userModel.email.split('@')[0];
-    var pic = authState.userModel.profilePic ?? dummyProfilePic;
-    var tags = getHashTags(_textEditingController.text);
+    var name = authState.userModel!.displayName ??
+        authState.userModel!.email!.split('@')[0];
+    var pic = authState.userModel!.profilePic ?? dummyProfilePic;
+    var tags = getHashTags(_textEditingController!.text);
 
     UserModel commentedUser = UserModel(
         displayName: name,
-        userName: authState.userModel.userName,
-        isVerified: authState.userModel.isVerified,
+        userName: authState.userModel!.userName,
+        isVerified: authState.userModel!.isVerified,
         profilePic: pic,
         userId: authState.userId);
 
     var postId = state.tweetToReplyModel.key;
 
     FeedModel reply = FeedModel(
-      description: _textEditingController.text,
+      description: _textEditingController!.text,
       user: commentedUser,
       createdAt: DateTime.now().toUtc().toString(),
       tags: tags,
@@ -200,7 +200,7 @@ class _ImageViewPgeState extends State<ImageViewPge> {
     state.addcommentToPost(reply);
     FocusScope.of(context).requestFocus(_focusNode);
     setState(() {
-      _textEditingController.text = '';
+      _textEditingController!.text = '';
     });
   }
 

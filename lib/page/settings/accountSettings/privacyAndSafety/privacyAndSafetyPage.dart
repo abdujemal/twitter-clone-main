@@ -9,7 +9,7 @@ import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
 
 class PrivacyAndSaftyPage extends StatelessWidget {
-  const PrivacyAndSaftyPage({Key key}) : super(key: key);
+  const PrivacyAndSaftyPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class PrivacyAndSaftyPage extends StatelessWidget {
       backgroundColor: TwitterColor.white,
       appBar: SettingsAppBar(
         title: 'Privacy and safety',
-        subtitle: user.userName,
+        subtitle: user.userName ?? "",
       ),
       body: ListView(
         physics: BouncingScrollPhysics(),

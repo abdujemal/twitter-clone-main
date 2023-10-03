@@ -16,7 +16,7 @@ import 'notification/notificationPage.dart';
 import 'search/SearchPage.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
   _HomePageState createState() => _HomePageState();
 }
 
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
       /// `notificationSenderId` is a user id who sends you a message
       /// `notificationReciverId` is a your user id.
       if (state.notificationType == NotificationType.Message &&
-          state.notificationReciverId == authstate.userModel.userId) {
+          state.notificationReciverId == authstate.userModel!.userId) {
         state.setNotificationType = null;
         state.getuserDetail(state.notificationSenderId).then((user) {
           cprint("Opening user chat screen");
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
       /// You can check that tweet on his profile timeline
       /// `notificationSenderId` is user id who tagged you in a tweet
       else if (state.notificationType == NotificationType.Mention &&
-          state.notificationReciverId == authstate.userModel.userId) {
+          state.notificationReciverId == authstate.userModel!.userId) {
         state.setNotificationType = null;
         Navigator.of(context)
             .pushNamed('/ProfilePage/' + state.notificationSenderId);
@@ -132,19 +132,14 @@ class _HomePageState extends State<HomePage> {
           scaffoldKey: _scaffoldKey,
           refreshIndicatorKey: refreshIndicatorKey,
         );
-        break;
       case 1:
         return SearchPage(scaffoldKey: _scaffoldKey);
-        break;
       case 2:
         return NotificationPage(scaffoldKey: _scaffoldKey);
-        break;
       case 3:
         return ChatListPage(scaffoldKey: _scaffoldKey);
-        break;
       default:
         return FeedPage(scaffoldKey: _scaffoldKey);
-        break;
     }
   }
 

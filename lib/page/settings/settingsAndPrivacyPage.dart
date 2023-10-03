@@ -5,12 +5,11 @@ import 'package:flutter_twitter_clone/page/settings/widgets/headerWidget.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
 import 'widgets/settingsRowWidget.dart';
 
 class SettingsAndPrivacyPage extends StatelessWidget {
-  const SettingsAndPrivacyPage({Key key}) : super(key: key);
+  const SettingsAndPrivacyPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class SettingsAndPrivacyPage extends StatelessWidget {
       ),
       body: ListView(
         children: <Widget>[
-          HeaderWidget(user.userName),
+          HeaderWidget(user.userName ?? ""),
           SettingRowWidget(
             "Account",
             navigateTo: 'AccountSettingsPage',

@@ -5,11 +5,10 @@ import 'package:flutter_twitter_clone/page/settings/widgets/headerWidget.dart';
 import 'package:flutter_twitter_clone/page/settings/widgets/settingsAppbar.dart';
 import 'package:flutter_twitter_clone/page/settings/widgets/settingsRowWidget.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
 
 class NotificationPage extends StatelessWidget {
-  const NotificationPage({Key key}) : super(key: key);
+  const NotificationPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +17,7 @@ class NotificationPage extends StatelessWidget {
       backgroundColor: TwitterColor.white,
       appBar: SettingsAppBar(
         title: 'Notifications',
-        subtitle: user.userName,
+        subtitle: user.userName ?? "",
       ),
       body: ListView(
         children: <Widget>[

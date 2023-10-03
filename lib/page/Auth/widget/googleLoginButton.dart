@@ -7,9 +7,9 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class GoogleLoginButton extends StatelessWidget {
-  const GoogleLoginButton({Key key, @required this.loader, this.loginCallback});
+  const GoogleLoginButton({Key? key, required this.loader, this.loginCallback});
   final CustomLoader loader;
-  final Function loginCallback;
+  final Function? loginCallback;
   void _googleLogin(context) {
     var state = Provider.of<AuthState>(context, listen: false);
     loader.showLoader(context);
@@ -18,7 +18,9 @@ class GoogleLoginButton extends StatelessWidget {
       if (state.user != null) {
         loader.hideLoader();
         Navigator.pop(context);
-        loginCallback();
+        if (loginCallback != null) {
+          loginCallback!();
+        }
       } else {
         loader.hideLoader();
         cprint('Unable to login', errorIn: '_googleLoginButton');
@@ -29,7 +31,7 @@ class GoogleLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RippleButton(
-      onPressed: (){
+      onPressed: () {
         _googleLogin(context);
       },
       borderRadius: BorderRadius.circular(10),

@@ -3,7 +3,7 @@ import 'package:flutter_twitter_clone/helper/theme.dart';
 import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 
 class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
-  SettingsAppBar({Key key, this.title, this.subtitle}) : super(key: key);
+  SettingsAppBar({Key? key, required this.title, required this.subtitle}) : super(key: key);
   final String title, subtitle;
   final Size appBarHeight = Size.fromHeight(60.0);
   @override
@@ -18,7 +18,7 @@ class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
             title,
           ),
           Text(
-            subtitle ?? '',
+            subtitle,
             style: TextStyle(color: AppColor.darkGrey, fontSize: 18),
           )
         ],

@@ -8,9 +8,9 @@ import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
 
 class SidebarMenu extends StatefulWidget {
-  const SidebarMenu({Key key, this.scaffoldKey}) : super(key: key);
+  const SidebarMenu({Key? key, this.scaffoldKey}) : super(key: key);
 
-  final GlobalKey<ScaffoldState> scaffoldKey;
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   _SidebarMenuState createState() => _SidebarMenuState();
 }
@@ -83,7 +83,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
                 ],
               ),
               subtitle: customText(
-                state.userModel.userName,
+                state.userModel.userName ?? "Name",
                 style: onPrimarySubTitleText.copyWith(
                     color: Colors.black54, fontSize: 15),
               ),
@@ -138,7 +138,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
   }
 
   ListTile _menuListRowButton(String title,
-      {Function onPressed, int icon, bool isEnable = false}) {
+      {Function? onPressed, int? icon, bool isEnable = false}) {
     return ListTile(
       onTap: () {
         if (onPressed != null) {
@@ -204,7 +204,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
   void _logOut() {
     final state = Provider.of<AuthState>(context,listen: false);
     final notificationDtate = Provider.of<NotificationState>(context,listen: false);
-    notificationDtate.unsubscribeNotifications(state.userModel?.userId);
+    notificationDtate.unsubscribeNotifications(state.userModel.userId ?? "");
     Navigator.pop(context);
     state.logoutCallback();
   }

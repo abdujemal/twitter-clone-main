@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 class TrendsPage extends StatelessWidget {
   String sortBy = "";
 
-  TrendsPage({Key key}) : super(key: key);
+  TrendsPage({Key? key}) : super(key: key);
 
   void openBottomSheet(
       BuildContext context, double height, Widget child) async {

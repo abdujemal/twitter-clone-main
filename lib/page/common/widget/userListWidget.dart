@@ -9,11 +9,11 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class UserListWidget extends StatelessWidget {
-  final List<UserModel> userslist;
-  final String emptyScreenText;
-  final String emptyScreenSubTileText;
+  final List<UserModel>? userslist;
+  final String? emptyScreenText;
+  final String? emptyScreenSubTileText;
   UserListWidget({
-    Key key,
+    Key? key,
     this.userslist,
     this.emptyScreenText,
     this.emptyScreenSubTileText,
@@ -23,21 +23,21 @@ class UserListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var state = Provider.of<AuthState>(context, listen: false);
     var myFollowingList = state.userModel.followingList;
-    String myId = state.userModel.key;
+    String myId = state.userModel.key!;
     return ListView.separated(
       itemBuilder: (context, index) {
         return UserTile(
-            user: userslist[index],
+            user: userslist![index],
             myId: myId,
             isFollow:
-                myFollowingList.any((id) => id == userslist[index].userId));
+                myFollowingList!.any((id) => id == userslist![index].userId));
       },
       separatorBuilder: (context, index) {
         return Divider(
           height: 0,
         );
       },
-      itemCount: userslist.length,
+      itemCount: userslist!.length,
     );
   }
 }
@@ -46,15 +46,15 @@ class UserListWidget extends StatelessWidget {
 /// if value of `isFollow` is false then display [Follow] button
 /// if myId is equal to [user.userId] then hide [Follow]/[Following] button
 class UserTile extends StatelessWidget {
-  const UserTile({Key key, this.user, this.myId, this.isFollow})
+  const UserTile({Key? key, this.user, this.myId, this.isFollow})
       : super(key: key);
-  final UserModel user;
-  final String myId;
-  final bool isFollow;
+  final UserModel? user;
+  final String? myId;
+  final bool? isFollow;
 
   /// Return empty string for default bio
   /// Max length of bio is 100
-  String getBio(String bio) {
+  String? getBio(String? bio) {
     if (bio != null && bio.isNotEmpty && bio != "Edit profile to update bio") {
       if (bio.length > 100) {
         bio = bio.substring(0, 100) + '...';
@@ -76,27 +76,27 @@ class UserTile extends StatelessWidget {
         children: <Widget>[
           ListTile(
             onTap: () {
-              Navigator.of(context).pushNamed('/ProfilePage/' + user?.userId);
+              Navigator.of(context).pushNamed("/ProfilePage/${ user!.userId??null}");
             },
             leading: RippleButton(
               onPressed: () {
-                Navigator.of(context).pushNamed('/ProfilePage/' + user?.userId);
+                Navigator.of(context).pushNamed("/ProfilePage/${ user!.userId??null}");
               },
               borderRadius: BorderRadius.all(Radius.circular(60)),
-              child: customImage(context, user.profilePic, height: 55),
+              child: customImage(context, user!.profilePic, height: 55),
             ),
             title: Row(
               children: <Widget>[
                 ConstrainedBox(
                   constraints: BoxConstraints(
                       minWidth: 0, maxWidth: fullWidth(context) * .4),
-                  child: TitleText(user.displayName,
+                  child: TitleText(user!.displayName ?? "",
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
                       overflow: TextOverflow.ellipsis),
                 ),
                 SizedBox(width: 3),
-                user.isVerified
+                user!.isVerified == true
                     ? customIcon(
                         context,
                         icon: AppIcon.blueTick,
@@ -108,8 +108,8 @@ class UserTile extends StatelessWidget {
                     : SizedBox(width: 0),
               ],
             ),
-            subtitle: Text(user.userName),
-            trailing: myId == user.userId
+            subtitle: Text(user!.userName ?? "Unknown"),
+            trailing: myId == user!.userId
                 ? SizedBox.shrink()
                 : RippleButton(
                     onPressed: () {},
@@ -117,11 +117,11 @@ class UserTile extends StatelessWidget {
                     borderRadius: BorderRadius.circular(25),
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: isFollow ? 15 : 20,
+                        horizontal: isFollow == true ? 15 : 20,
                         vertical: 3,
                       ),
                       decoration: BoxDecoration(
-                        color: isFollow
+                        color: isFollow == true
                             ? TwitterColor.dodgetBlue
                             : TwitterColor.white,
                         border: Border.all(
@@ -131,9 +131,9 @@ class UserTile extends StatelessWidget {
                         borderRadius: BorderRadius.circular(25),
                       ),
                       child: Text(
-                        isFollow ? 'Following' : 'Follow',
+                        isFollow ==true ? 'Following' : 'Follow',
                         style: TextStyle(
-                          color: isFollow ? TwitterColor.white : Colors.blue,
+                          color: isFollow == true ? TwitterColor.white : Colors.blue,
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
                         ),
@@ -141,12 +141,12 @@ class UserTile extends StatelessWidget {
                     ),
                   ),
           ),
-          getBio(user.bio) == null
+          getBio(user!.bio) == null
               ? SizedBox.shrink()
               : Padding(
                   padding: EdgeInsets.only(left: 90),
                   child: Text(
-                    getBio(user.bio),
+                    getBio(user!.bio) ?? "No Bio",
                   ),
                 )
         ],

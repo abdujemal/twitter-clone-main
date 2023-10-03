@@ -11,7 +11,7 @@ import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:provider/provider.dart';
 
 class SplashPage extends StatefulWidget {
-  SplashPage({Key key}) : super(key: key);
+  SplashPage({Key? key}) : super(key: key);
 
   @override
   _SplashPageState createState() => _SplashPageState();

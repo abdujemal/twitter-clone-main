@@ -1,21 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+List<BoxShadow> shadow = <BoxShadow>[
+  BoxShadow(
+      blurRadius: 10,
+      offset: Offset(5, 5),
+      color: AppTheme.apptheme.colorScheme.secondary,
+      spreadRadius: 1)
+];
+String get description {
+  return '';
+}
 
-List<BoxShadow>  shadow = <BoxShadow>[BoxShadow(blurRadius: 10,offset: Offset(5, 5),color: AppTheme.apptheme.accentColor,spreadRadius:1)];
-String get description { return '';}
-TextStyle get onPrimaryTitleText { return  TextStyle(color: Colors.white,fontWeight: FontWeight.w600);}
-TextStyle get onPrimarySubTitleText { return  TextStyle(color: Colors.white,);}
-BoxDecoration softDecoration =  BoxDecoration(
-            boxShadow: <BoxShadow>[
-              BoxShadow(blurRadius: 8,offset: Offset(5, 5),color: Color(0xffe2e5ed),spreadRadius:5),
-              BoxShadow(blurRadius: 8,offset: Offset(-5,-5),color: Color(0xffffffff),spreadRadius:5)
-              ],
-              color: Color(0xfff1f3f6)
-          );
-TextStyle get titleStyle { return  TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold,);}
-TextStyle get subtitleStyle { return  TextStyle(color: AppColor.darkGrey,fontSize: 14,fontWeight: FontWeight.bold);}
-TextStyle get userNameStyle { return  TextStyle(color: AppColor.darkGrey,fontSize: 14,fontWeight: FontWeight.bold);}
-TextStyle get textStyle14 { return  TextStyle(color: AppColor.darkGrey,fontSize: 14,fontWeight: FontWeight.bold);}
+TextStyle get onPrimaryTitleText {
+  return TextStyle(color: Colors.white, fontWeight: FontWeight.w600);
+}
+
+TextStyle get onPrimarySubTitleText {
+  return TextStyle(
+    color: Colors.white,
+  );
+}
+
+BoxDecoration softDecoration = BoxDecoration(boxShadow: <BoxShadow>[
+  BoxShadow(
+      blurRadius: 8,
+      offset: Offset(5, 5),
+      color: Color(0xffe2e5ed),
+      spreadRadius: 5),
+  BoxShadow(
+      blurRadius: 8,
+      offset: Offset(-5, -5),
+      color: Color(0xffffffff),
+      spreadRadius: 5)
+], color: Color(0xfff1f3f6));
+TextStyle get titleStyle {
+  return TextStyle(
+    color: Colors.black,
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  );
+}
+
+TextStyle get subtitleStyle {
+  return TextStyle(
+      color: AppColor.darkGrey, fontSize: 14, fontWeight: FontWeight.bold);
+}
+
+TextStyle get userNameStyle {
+  return TextStyle(
+      color: AppColor.darkGrey, fontSize: 14, fontWeight: FontWeight.bold);
+}
+
+TextStyle get textStyle14 {
+  return TextStyle(
+      color: AppColor.darkGrey, fontSize: 14, fontWeight: FontWeight.bold);
+}
 
 class TwitterColor {
   static final Color bondiBlue = Color.fromRGBO(0, 132, 180, 1.0);
@@ -33,7 +73,7 @@ class TwitterColor {
   static final Color paleSky50 = Color.fromRGBO(101, 118, 133, 0.5);
 }
 
-class AppColor{
+class AppColor {
   static final Color primary = Color(0xff1DA1F2);
   static final Color secondary = Color(0xff14171A);
   static final Color darkGrey = Color(0xff1657786);
@@ -42,55 +82,54 @@ class AppColor{
   static final Color extraExtraLightGrey = Color(0xfF5F8FA);
   static final Color white = Color(0xFFffffff);
 }
-class AppTheme{
+
+class AppTheme {
   static final ThemeData apptheme = ThemeData(
-    primarySwatch: Colors.blue,
-    // fontFamily: 'HelveticaNeue',
-    backgroundColor: TwitterColor.white,
-    accentColor: TwitterColor.dodgetBlue,
-    brightness: Brightness.light,
-    primaryColor: AppColor.primary,
-    cardColor: Colors.white,
-    unselectedWidgetColor: Colors.grey,
-    bottomAppBarColor: Colors.white,
-    bottomSheetTheme: BottomSheetThemeData(
-      backgroundColor: AppColor.white
-    ),
-    appBarTheme: AppBarTheme(
+      backgroundColor: TwitterColor.white,
       brightness: Brightness.light,
-      color: TwitterColor.white,
-      iconTheme: IconThemeData(color: TwitterColor.dodgetBlue,),
-      elevation: 0,
-      textTheme:  TextTheme(
-        title: TextStyle(
-          color: Colors.black,
-          fontSize: 26,
-          fontStyle: FontStyle.normal),
-        )),
-        tabBarTheme: TabBarTheme(
-          labelStyle: titleStyle.copyWith(color: TwitterColor.dodgetBlue),
-          unselectedLabelColor: AppColor.darkGrey,
-          unselectedLabelStyle: titleStyle.copyWith(color: AppColor.darkGrey),
-          labelColor: TwitterColor.dodgetBlue,
-          labelPadding: EdgeInsets.symmetric(vertical: 12),
-        ),
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor:   TwitterColor.dodgetBlue,
-        ),
-        colorScheme: ColorScheme(
-          background: Colors.white,
-          onPrimary: Colors.white,
-          onBackground: Colors.black,
-          onError: Colors.white,
-          onSecondary: Colors.white,
-          onSurface: Colors.black,
-          error: Colors.red,
-          primary: Colors.blue,
-          primaryVariant: Colors.blue,
-          secondary: AppColor.secondary,
-          secondaryVariant: AppColor.darkGrey,
-          surface: Colors.white,
-          brightness: Brightness.light
-        )
-    );
+      primaryColor: AppColor.primary,
+      cardColor: Colors.white,
+      unselectedWidgetColor: Colors.grey,
+      bottomAppBarColor: Colors.white,
+      bottomSheetTheme: BottomSheetThemeData(backgroundColor: AppColor.white),
+      appBarTheme: AppBarTheme(
+          color: TwitterColor.white,
+          iconTheme: IconThemeData(
+            color: TwitterColor.dodgetBlue,
+          ),
+          elevation: 0,
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
+          toolbarTextStyle: TextTheme(
+            subtitle1: TextStyle(
+                color: Colors.black, fontSize: 26, fontStyle: FontStyle.normal),
+          ).bodyText2,
+          titleTextStyle: TextTheme(
+            subtitle2: TextStyle(
+                color: Colors.black, fontSize: 26, fontStyle: FontStyle.normal),
+          ).headline6),
+      tabBarTheme: TabBarTheme(
+        labelStyle: titleStyle.copyWith(color: TwitterColor.dodgetBlue),
+        unselectedLabelColor: AppColor.darkGrey,
+        unselectedLabelStyle: titleStyle.copyWith(color: AppColor.darkGrey),
+        labelColor: TwitterColor.dodgetBlue,
+        labelPadding: EdgeInsets.symmetric(vertical: 12),
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: TwitterColor.dodgetBlue,
+      ),
+      colorScheme: ColorScheme(
+              background: Colors.white,
+              onPrimary: Colors.white,
+              onBackground: Colors.black,
+              onError: Colors.white,
+              onSecondary: Colors.white,
+              onSurface: Colors.black,
+              error: Colors.red,
+              primary: Colors.blue,
+              primaryVariant: Colors.blue,
+              secondary: AppColor.secondary,
+              secondaryVariant: AppColor.darkGrey,
+              surface: Colors.white,
+              brightness: Brightness.light)
+          .copyWith(secondary: TwitterColor.dodgetBlue));
 }

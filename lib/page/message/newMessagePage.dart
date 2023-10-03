@@ -10,16 +10,16 @@ import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
 class NewMessagePage extends StatefulWidget {
-  const NewMessagePage({Key key, this.scaffoldKey}) : super(key: key);
+  const NewMessagePage({Key? key,  this.scaffoldKey}) : super(key: key);
 
-  final GlobalKey<ScaffoldState> scaffoldKey;
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   @override
   State<StatefulWidget> createState() => _NewMessagePageState();
 }
 
 class _NewMessagePageState extends State<NewMessagePage> {
-  TextEditingController textController;
+  TextEditingController? textController;
 
   @override
   void initState() {
@@ -40,13 +40,13 @@ class _NewMessagePageState extends State<NewMessagePage> {
           ConstrainedBox(
             constraints:
                 BoxConstraints(minWidth: 0, maxWidth: fullWidth(context) - 104),
-            child: TitleText(user.displayName,
+            child: TitleText(user.displayName ?? "",
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
                 overflow: TextOverflow.ellipsis),
           ),
           SizedBox(width: 3),
-          user.isVerified
+          user.isVerified == true
               ? customIcon(context,
                   icon: AppIcon.blueTick,
                   istwitterIcon: true,
@@ -56,7 +56,7 @@ class _NewMessagePageState extends State<NewMessagePage> {
               : SizedBox(width: 0),
         ],
       ),
-      subtitle: Text(user.userName),
+      subtitle: Text(user.userName ?? ""),
     );
   }
 
@@ -72,7 +72,7 @@ class _NewMessagePageState extends State<NewMessagePage> {
       onWillPop: _onWillPop,
       child: Scaffold(
         appBar: CustomAppBar(
-          scaffoldKey: widget.scaffoldKey,
+          scaffoldKey: widget.scaffoldKey!,
           isBackButton: true,
           isbootomLine: true,
           title: customTitleText(
@@ -107,12 +107,12 @@ class _NewMessagePageState extends State<NewMessagePage> {
                   child: ListView.separated(
                     physics: BouncingScrollPhysics(),
                     itemBuilder: (context, index) => _userTile(
-                      state.userlist[index],
+                      state.userlist![index],
                     ),
                     separatorBuilder: (_, index) => Divider(
                       height: 0,
                     ),
-                    itemCount: state.userlist.length,
+                    itemCount: state.userlist!.length,
                   ),
                 )
               ],

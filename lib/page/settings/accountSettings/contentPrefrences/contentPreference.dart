@@ -5,13 +5,10 @@ import 'package:flutter_twitter_clone/page/settings/widgets/headerWidget.dart';
 import 'package:flutter_twitter_clone/page/settings/widgets/settingsAppbar.dart';
 import 'package:flutter_twitter_clone/page/settings/widgets/settingsRowWidget.dart';
 import 'package:flutter_twitter_clone/state/authState.dart';
-import 'package:flutter_twitter_clone/widgets/customAppBar.dart';
-import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
-import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
 
 class ContentPrefrencePage extends StatelessWidget {
-  const ContentPrefrencePage({Key key}) : super(key: key);
+  const ContentPrefrencePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +17,7 @@ class ContentPrefrencePage extends StatelessWidget {
       backgroundColor: TwitterColor.white,
       appBar: SettingsAppBar(
         title: 'Content preferences',
-        subtitle: user.userName,
+        subtitle: user.userName ?? "",
       ),
       body: ListView(
         physics: BouncingScrollPhysics(),

@@ -6,18 +6,18 @@ import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatefulWidget {
-  EditProfilePage({Key key}) : super(key: key);
+  EditProfilePage({Key? key}) : super(key: key);
   _EditProfilePageState createState() => _EditProfilePageState();
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  File _image;
-  TextEditingController _name;
-  TextEditingController _bio;
-  TextEditingController _location;
-  TextEditingController _dob;
+  File? _image;
+  TextEditingController? _name;
+  TextEditingController? _bio;
+  TextEditingController? _location;
+  TextEditingController? _dob;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  String dob;
+  String? dob;
   @override
   void initState() {
     _name = TextEditingController();
@@ -25,18 +25,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _location = TextEditingController();
     _dob = TextEditingController();
     var state = Provider.of<AuthState>(context, listen: false);
-    _name.text = state?.userModel?.displayName;
-    _bio.text = state?.userModel?.bio;
-    _location.text = state?.userModel?.location;
-    _dob.text = getdob(state?.userModel?.dob);
+    _name!.text = state.userModel!.displayName ?? "";
+    _bio!.text = state.userModel!.bio ?? "";
+    _location!.text = state.userModel!.location ?? "";
+    _dob!.text = getdob(state.userModel!.dob ?? "");
     super.initState();
   }
 
   void dispose() {
-    _name.dispose();
-    _bio.dispose();
-    _location.dispose();
-    _dob.dispose();
+    _name!.dispose();
+    _bio!.dispose();
+    _location!.dispose();
+    _dob!.dispose();
     super.dispose();
   }
 
@@ -63,12 +63,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ],
           ),
         ),
-        _entry('Name', controller: _name),
-        _entry('Bio', controller: _bio, maxLine: null),
-        _entry('Location', controller: _location),
+        _entry('Name', controller: _name!),
+        _entry('Bio', controller: _bio!, maxLine: null),
+        _entry('Location', controller: _location!),
         InkWell(
           onTap: showCalender,
-          child: _entry('Date of birth', isenable: false, controller: _dob),
+          child: _entry('Date of birth', isenable: false, controller: _dob!),
         )
       ],
     );
@@ -83,14 +83,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
         border: Border.all(color: Colors.white, width: 5),
         shape: BoxShape.circle,
         image: DecorationImage(
-            image: customAdvanceNetworkImage(authstate.userModel.profilePic),
+            image: customAdvanceNetworkImage(authstate.userModel!.profilePic),
             fit: BoxFit.cover),
       ),
       child: CircleAvatar(
         radius: 40,
         backgroundImage: _image != null
-            ? FileImage(_image)
-            : customAdvanceNetworkImage(authstate.userModel.profilePic),
+            ? FileImage(_image!)
+            : customAdvanceNetworkImage(authstate.userModel!.profilePic),
         child: Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -108,8 +108,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget _entry(String title,
-      {TextEditingController controller,
-      int maxLine = 1,
+      {required TextEditingController controller,
+      int? maxLine = 1,
       bool isenable = true}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
@@ -131,7 +131,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void showCalender() async {
-    DateTime picked = await showDatePicker(
+    DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime(2019, DateTime.now().month, DateTime.now().day),
       firstDate: DateTime(1950, DateTime.now().month, DateTime.now().day + 3),
@@ -140,41 +140,41 @@ class _EditProfilePageState extends State<EditProfilePage> {
     setState(() {
       if (picked != null) {
         dob = picked.toString();
-        _dob.text = getdob(dob);
+        _dob!.text = getdob(dob!);
       }
     });
   }
 
   void _submitButton() {
-    if (_name.text.length > 27) {
+    if (_name!.text.length > 27) {
       customSnackBar(_scaffoldKey, 'Name length cannot exceed 27 character');
       return;
     }
     var state = Provider.of<AuthState>(context, listen: false);
-    var model = state.userModel.copyWith(
-      key: state.userModel.userId,
-      displayName: state.userModel.displayName,
-      bio: state.userModel.bio,
-      contact: state.userModel.contact,
-      dob: state.userModel.dob,
-      email: state.userModel.email,
-      location: state.userModel.location,
-      profilePic: state.userModel.profilePic,
-      userId: state.userModel.userId,
+    var model = state.userModel!.copyWith(
+      key: state.userModel!.userId,
+      displayName: state.userModel!.displayName,
+      bio: state.userModel!.bio,
+      contact: state.userModel!.contact,
+      dob: state.userModel!.dob,
+      email: state.userModel!.email,
+      location: state.userModel!.location,
+      profilePic: state.userModel!.profilePic,
+      userId: state.userModel!.userId,
     );
-    if (_name.text != null && _name.text.isNotEmpty) {
-      model.displayName = _name.text;
+    if (_name != null && _name!.text.isNotEmpty) {
+      model.displayName = _name!.text;
     }
-    if (_bio.text != null && _bio.text.isNotEmpty) {
-      model.bio = _bio.text;
+    if (_bio != null && _bio!.text.isNotEmpty) {
+      model.bio = _bio!.text;
     }
-    if (_location.text != null && _location.text.isNotEmpty) {
-      model.location = _location.text;
+    if (_location != null && _location!.text.isNotEmpty) {
+      model.location = _location!.text;
     }
     if (dob != null) {
       model.dob = dob;
     }
-    state.updateUserProfile(model, image: _image);
+    state.updateUserProfile(model, image: _image!);
     Navigator.of(context).pop();
   }
 

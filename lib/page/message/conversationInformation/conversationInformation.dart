@@ -12,7 +12,7 @@ import 'package:flutter_twitter_clone/widgets/newWidget/rippleButton.dart';
 import 'package:provider/provider.dart';
 
 class ConversationInformation extends StatelessWidget {
-  const ConversationInformation({Key key}) : super(key: key);
+  const ConversationInformation({Key? key}) : super(key: key);
 
   Widget _header(BuildContext context, UserModel user) {
     return Padding(
@@ -27,7 +27,7 @@ class ConversationInformation extends StatelessWidget {
                 child: RippleButton(
                   onPressed: () {
                     Navigator.of(context)
-                        .pushNamed('/ProfilePage/' + user?.userId);
+                        .pushNamed('/ProfilePage/${user.userId ?? ""}');
                   },
                   borderRadius: BorderRadius.circular(40),
                   child: customImage(context, user.profilePic, height: 80),
@@ -37,7 +37,7 @@ class ConversationInformation extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               UrlText(
-                text: user.displayName,
+                text: user.displayName ?? "",
                 style: onPrimaryTitleText.copyWith(
                   color: Colors.black,
                   fontSize: 20,
@@ -46,7 +46,7 @@ class ConversationInformation extends StatelessWidget {
               SizedBox(
                 width: 3,
               ),
-              user.isVerified
+              user.isVerified == true
                   ? customIcon(
                       context,
                       icon: AppIcon.blueTick,
@@ -59,7 +59,7 @@ class ConversationInformation extends StatelessWidget {
             ],
           ),
           customText(
-            user.userName,
+            user.userName ?? "",
             style: onPrimarySubTitleText.copyWith(
               color: Colors.black54,
               fontSize: 15,

@@ -13,12 +13,13 @@ import 'package:flutter_twitter_clone/widgets/tweet/widgets/tweetBottomSheet.dar
 import 'package:provider/provider.dart';
 
 class FeedPage extends StatelessWidget {
-  const FeedPage({Key key, this.scaffoldKey, this.refreshIndicatorKey})
+  const FeedPage(
+      {Key? key, required this.scaffoldKey, this.refreshIndicatorKey})
       : super(key: key);
 
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  final GlobalKey<RefreshIndicatorState> refreshIndicatorKey;
+  final GlobalKey<RefreshIndicatorState>? refreshIndicatorKey;
 
   Widget _floatingActionButton(BuildContext context) {
     return FloatingActionButton(
@@ -53,7 +54,8 @@ class FeedPage extends StatelessWidget {
               return Future.value(true);
             },
             child: _FeedPageBody(
-              refreshIndicatorKey: refreshIndicatorKey,
+              refreshIndicatorKey:
+                  refreshIndicatorKey ?? GlobalKey<RefreshIndicatorState>(),
               scaffoldKey: scaffoldKey,
             ),
           ),
@@ -68,7 +70,8 @@ class _FeedPageBody extends StatelessWidget {
 
   final GlobalKey<RefreshIndicatorState> refreshIndicatorKey;
 
-  const _FeedPageBody({Key key, this.scaffoldKey, this.refreshIndicatorKey})
+  const _FeedPageBody(
+      {Key? key, required this.scaffoldKey, required this.refreshIndicatorKey})
       : super(key: key);
   Widget _getUserAvatar(BuildContext context) {
     var authState = Provider.of<AuthState>(context);
@@ -78,10 +81,10 @@ class _FeedPageBody extends StatelessWidget {
         context: context,
         onPressed: () {
           /// Open up sidebaar drawer on user avatar tap
-          scaffoldKey.currentState.openDrawer();
+          scaffoldKey.currentState!.openDrawer();
         },
         child:
-            customImage(context, authState.userModel?.profilePic, height: 30),
+            customImage(context, authState.userModel!.profilePic, height: 30),
       ),
     );
   }
@@ -91,10 +94,10 @@ class _FeedPageBody extends StatelessWidget {
     var authstate = Provider.of<AuthState>(context, listen: false);
     return Consumer<FeedState>(
       builder: (context, state, child) {
-        final List<FeedModel> list = state.getTweetList(authstate.userModel);
+        final List<FeedModel>? list = state.getTweetList(authstate.userModel!);
         return CustomScrollView(
           slivers: <Widget>[
-            child,
+            child ?? SizedBox(),
             state.isBusy && list == null
                 ? SliverToBoxAdapter(
                     child: Container(
@@ -116,7 +119,7 @@ class _FeedPageBody extends StatelessWidget {
                       )
                     : SliverList(
                         delegate: SliverChildListDelegate(
-                          list.map(
+                          list!.map(
                             (model) {
                               return Container(
                                 color: Colors.white,
@@ -142,7 +145,7 @@ class _FeedPageBody extends StatelessWidget {
         leading: _getUserAvatar(context),
         title: customTitleText('Home'),
         iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-        backgroundColor: Theme.of(context).appBarTheme.color,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         bottom: PreferredSize(
           child: Container(
             color: Colors.grey.shade200,

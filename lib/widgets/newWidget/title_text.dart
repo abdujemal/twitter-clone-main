@@ -10,7 +10,7 @@ class TitleText extends StatelessWidget {
   final TextOverflow overflow;
   const TitleText(
     this.text, {
-    Key key,
+    Key? key,
     this.fontSize = 18,
     this.color = Colors.black,
     this.fontWeight = FontWeight.w800,
@@ -21,7 +21,7 @@ class TitleText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: GoogleFonts.muli(
+      style: GoogleFonts.mulish(
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color,

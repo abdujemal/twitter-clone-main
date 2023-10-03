@@ -12,20 +12,20 @@ import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreenPage extends StatefulWidget {
-  ChatScreenPage({Key key, this.userProfileId}) : super(key: key);
+  ChatScreenPage({Key? key, this.userProfileId}) : super(key: key);
 
-  final String userProfileId;
+  final String? userProfileId;
 
   _ChatScreenPageState createState() => _ChatScreenPageState();
 }
 
 class _ChatScreenPageState extends State<ChatScreenPage> {
-  final messageController = new TextEditingController();
-  String senderId;
-  String userImage;
-  ChatState state;
-  ScrollController _controller;
-  GlobalKey<ScaffoldState> _scaffoldKey;
+  final messageController = TextEditingController();
+  String? senderId;
+  String? userImage;
+  late ChatState state;
+  late ScrollController _controller;
+  late GlobalKey<ScaffoldState> _scaffoldKey;
 
   @override
   void dispose() {
@@ -40,16 +40,16 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     final chatUserState = Provider.of<ChatUserState>(context, listen: false);
     final chatState = Provider.of<ChatState>(context, listen: false);
     final state = Provider.of<AuthState>(context, listen: false);
-    chatState.setChatUser = chatUserState.chatUser;
+    chatState.setChatUser = chatUserState.chatUser!;
     senderId = state.userId;
-    chatState.databaseInit(chatState.chatUser.userId, state.userId);
+    chatState.databaseInit(chatState.chatUser.userId ?? "", state.userId);
     chatState.getchatDetailAsync();
     super.initState();
   }
 
   Widget _chatScreenBody() {
     final state = Provider.of<ChatState>(context);
-    if (state.messageList == null || state.messageList.length == 0) {
+    if (state.messageList == null || state.messageList!.length == 0) {
       return Center(
         child: Text(
           'No message found',
@@ -62,8 +62,8 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       shrinkWrap: true,
       reverse: true,
       physics: BouncingScrollPhysics(),
-      itemCount: state.messageList.length,
-      itemBuilder: (context, index) => chatMessage(state.messageList[index]),
+      itemCount: state.messageList!.length,
+      itemBuilder: (context, index) => chatMessage(state.messageList![index]),
     );
   }
 
@@ -140,8 +140,8 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                         onLongPress: () {
                           var text = ClipboardData(text: chat.message);
                           Clipboard.setData(text);
-                          _scaffoldKey.currentState.hideCurrentSnackBar();
-                          _scaffoldKey.currentState.showSnackBar(
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               backgroundColor: TwitterColor.white,
                               content: Text(
@@ -164,7 +164,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
           padding: EdgeInsets.only(right: 10, left: 10),
           child: Text(
             getChatTime(chat.createdAt),
-            style: Theme.of(context).textTheme.caption.copyWith(fontSize: 12),
+            style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12),
           ),
         )
       ],
@@ -217,19 +217,19 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     message = ChatMessage(
         message: messageController.text,
         createdAt: DateTime.now().toUtc().toString(),
-        senderId: authstate.userModel.userId,
+        senderId: authstate.userModel!.userId,
         receiverId: state.chatUser.userId,
         seen: false,
         timeStamp: DateTime.now().toUtc().millisecondsSinceEpoch.toString(),
         senderName: authstate.user.displayName);
-    if (messageController.text == null || messageController.text.isEmpty) {
+    if (messageController == null || messageController.text.isEmpty) {
       return;
     }
     UserModel myUser = UserModel(
-        displayName: authstate.userModel.displayName,
-        userId: authstate.userModel.userId,
-        userName: authstate.userModel.userName,
-        profilePic: authstate.userModel.profilePic);
+        displayName: authstate.userModel!.displayName,
+        userId: authstate.userModel!.userId,
+        userName: authstate.userModel!.userName,
+        profilePic: authstate.userModel!.profilePic);
     UserModel secondUser = UserModel(
       displayName: state.chatUser.displayName,
       userId: state.chatUser.userId,
@@ -243,7 +243,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     try {
       // final state = Provider.of<ChatUserState>(context,listen: false);
       if (state.messageList != null &&
-          state.messageList.length > 1 &&
+          state.messageList!.length > 1 &&
           _controller.offset > 0) {
         _controller.animateTo(
           0.0,
@@ -267,14 +267,14 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             UrlText(
-              text: state.chatUser.displayName,
+              text: state.chatUser.displayName ?? "",
               style: TextStyle(
                   color: Colors.black87,
                   fontSize: 20,
                   fontWeight: FontWeight.bold),
             ),
             Text(
-              state.chatUser.userName,
+              state.chatUser.userName ?? "",
               style: TextStyle(color: AppColor.darkGrey, fontSize: 15),
             )
           ],

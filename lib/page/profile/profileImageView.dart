@@ -7,7 +7,7 @@ import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:provider/provider.dart';
 
 class ProfileImageView extends StatelessWidget {
-  const ProfileImageView({Key key}) : super(key: key);
+  const ProfileImageView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +24,8 @@ class ProfileImageView extends StatelessWidget {
           PopupMenuButton<Choice>(
             onSelected: (d) {
                 switch (d.title) {
-                  case "Share image link": share(authstate.profileUserModel.profilePic); break;
-                  case "Open in browser": launchURL(authstate.profileUserModel.profilePic); break;
+                  case "Share image link": share(authstate.profileUserModel.profilePic ?? ""); break;
+                  case "Open in browser": launchURL(authstate.profileUserModel.profilePic ?? ""); break;
                   case "Save":  break;
                 }
                 

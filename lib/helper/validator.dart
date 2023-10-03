@@ -9,8 +9,8 @@ class Validator {
     return false;
   }
 
-  String validateEmail(String s) {
-    Pattern pattern =
+  String? validateEmail(String s) {
+    String pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
     if (!regex.hasMatch(s)) {
@@ -20,7 +20,7 @@ class Validator {
     }
   }
 
-  String validateName(String s) {
+  String? validateName(String s) {
     if (_isNumeric(s)) {
       return 'Invalid Name!';
     }
@@ -30,7 +30,7 @@ class Validator {
     return null;
   }
 
-  String validatePassword(String s) {
+  String? validatePassword(String s) {
     if (s.isEmpty) {
       return 'Gotta be secure, enter a password!';
     }

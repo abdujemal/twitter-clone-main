@@ -5,7 +5,7 @@ import 'package:flutter_twitter_clone/widgets/newWidget/customUrlText.dart';
 class SettingRowWidget extends StatelessWidget {
   const SettingRowWidget(
     this.title, {
-    Key key,
+    Key? key,
     this.navigateTo,
     this.subtitle,
     this.textColor = Colors.black,
@@ -16,10 +16,11 @@ class SettingRowWidget extends StatelessWidget {
     this.showCheckBox = false,
   }) : super(key: key);
   final bool visibleSwitch, showDivider, showCheckBox;
-  final String navigateTo;
-  final String subtitle, title;
+  final String? navigateTo;
+  final String? subtitle;
+  final String? title;
   final Color textColor;
-  final Function onPressed;
+  final Function? onPressed;
   final double vPadding;
 
   @override
@@ -31,7 +32,7 @@ class SettingRowWidget extends StatelessWidget {
               EdgeInsets.symmetric(vertical: vPadding, horizontal: 18),
           onTap: () {
             if (onPressed != null) {
-              onPressed();
+              onPressed!();
               return;
             }
             if (navigateTo == null) {
@@ -48,7 +49,7 @@ class SettingRowWidget extends StatelessWidget {
           subtitle: subtitle == null
               ? null
               : UrlText(
-                  text: subtitle,
+                  text: subtitle!,
                   style: TextStyle(
                       color: TwitterColor.paleSky, fontWeight: FontWeight.w400),
                 ),

@@ -8,18 +8,20 @@ import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/title_text.dart';
 import 'package:provider/provider.dart';
 
-class SignIn extends StatefulWidget {
-  final VoidCallback loginCallback;
+import '../../helper/flatbutton.dart';
 
-  const SignIn({Key key, this.loginCallback}) : super(key: key);
+class SignIn extends StatefulWidget {
+  final VoidCallback? loginCallback;
+
+  const SignIn({Key? key, this.loginCallback}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _SignInState();
 }
 
 class _SignInState extends State<SignIn> {
-  TextEditingController _emailController;
-  TextEditingController _passwordController;
-  CustomLoader loader;
+  TextEditingController? _emailController;
+  TextEditingController? _passwordController;
+  CustomLoader? loader;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   void initState() {
@@ -30,8 +32,8 @@ class _SignInState extends State<SignIn> {
   }
   @override
   void dispose() { 
-    _emailController.dispose();
-    _passwordController.dispose();
+    _emailController!.dispose();
+    _passwordController!.dispose();
     super.dispose();
   }
   Widget _body(BuildContext context) {
@@ -43,9 +45,9 @@ class _SignInState extends State<SignIn> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SizedBox(height: 150),
-            _entryFeild('Enter email', controller: _emailController),
+            _entryFeild('Enter email', controller: _emailController!),
             _entryFeild('Enter password',
-                controller: _passwordController, isPassword: true),
+                controller: _passwordController!, isPassword: true),
             _emailLoginButton(context),
             SizedBox(height: 20),
             _labelButton('Forget password?', onPressed: () {
@@ -59,7 +61,7 @@ class _SignInState extends State<SignIn> {
             ),
             GoogleLoginButton(
               loginCallback: widget.loginCallback,
-              loader: loader,
+              loader: loader!,
             ),
             SizedBox(height: 100),
           ],
@@ -69,7 +71,7 @@ class _SignInState extends State<SignIn> {
   }
 
   Widget _entryFeild(String hint,
-      {TextEditingController controller, bool isPassword = false}) {
+      {TextEditingController? controller, bool isPassword = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 15),
       decoration: BoxDecoration(
@@ -96,9 +98,9 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Widget _labelButton(String title, {Function onPressed}) {
+  Widget _labelButton(String title, {Function? onPressed}) {
     return FlatButton(
-      onPressed: () {
+      onTap: () {
         if (onPressed != null) {
           onPressed();
         }
@@ -117,9 +119,9 @@ class _SignInState extends State<SignIn> {
       width: fullWidth(context),
       margin: EdgeInsets.symmetric(vertical: 35),
       child: FlatButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        borderRadius: BorderRadius.circular(30),
         color: TwitterColor.dodgetBlue,
-        onPressed: _emailLogin,
+        onTap: _emailLogin,
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         child: TitleText('Submit', color: Colors.white),
       ),
@@ -131,25 +133,25 @@ class _SignInState extends State<SignIn> {
     if (state.isbusy) {
       return;
     }
-    loader.showLoader(context);
+    loader!.showLoader(context);
     var isValid = validateCredentials(
-        _scaffoldKey, _emailController.text, _passwordController.text);
+        _scaffoldKey, _emailController!.text, _passwordController!.text);
     if (isValid) {
       state
-          .signIn(_emailController.text, _passwordController.text,
+          .signIn(_emailController!.text, _passwordController!.text,
               scaffoldKey: _scaffoldKey)
           .then((status) {
         if (state.user != null) {
-          loader.hideLoader();
+          loader!.hideLoader();
           Navigator.pop(context);
-          widget.loginCallback();
+          widget.loginCallback!();
         } else {
           cprint('Unable to login', errorIn: '_emailLoginButton');
-          loader.hideLoader();
+          loader!.hideLoader();
         }
       });
     } else {
-      loader.hideLoader();
+      loader!.hideLoader();
     }
   }
 

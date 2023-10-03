@@ -12,20 +12,22 @@ import 'package:flutter_twitter_clone/widgets/customWidgets.dart';
 import 'package:flutter_twitter_clone/widgets/newWidget/customLoader.dart';
 import 'package:provider/provider.dart';
 
-class Signup extends StatefulWidget {
-  final VoidCallback loginCallback;
+import '../../helper/flatbutton.dart';
 
-  const Signup({Key key, this.loginCallback}) : super(key: key);
+class Signup extends StatefulWidget {
+  final VoidCallback? loginCallback;
+
+  const Signup({Key? key, this.loginCallback}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _SignupState();
 }
 
 class _SignupState extends State<Signup> {
-  TextEditingController _nameController;
-  TextEditingController _emailController;
-  TextEditingController _passwordController;
-  TextEditingController _confirmController;
-  CustomLoader loader;
+  TextEditingController? _nameController;
+  TextEditingController? _emailController;
+  TextEditingController? _passwordController;
+  TextEditingController? _confirmController;
+  CustomLoader? loader;
   final _formKey = new GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
@@ -39,10 +41,10 @@ class _SignupState extends State<Signup> {
   }
 
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    _nameController.dispose();
-    _confirmController.dispose();
+    _emailController!.dispose();
+    _passwordController!.dispose();
+    _nameController!.dispose();
+    _confirmController!.dispose();
     super.dispose();
   }
 
@@ -71,7 +73,7 @@ class _SignupState extends State<Signup> {
             // _googleLoginButton(context),
             GoogleLoginButton(
               loginCallback: widget.loginCallback,
-              loader: loader,
+              loader: loader!,
             ),
             SizedBox(height: 30),
           ],
@@ -81,7 +83,7 @@ class _SignupState extends State<Signup> {
   }
 
   Widget _entryFeild(String hint,
-      {TextEditingController controller,
+      {TextEditingController? controller,
       bool isPassword = false,
       bool isEmail = false}) {
     return Container(
@@ -118,9 +120,9 @@ class _SignupState extends State<Signup> {
       margin: EdgeInsets.symmetric(vertical: 15),
       width: MediaQuery.of(context).size.width,
       child: FlatButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        borderRadius: BorderRadius.circular(30),
         color: TwitterColor.dodgetBlue,
-        onPressed: _submitForm,
+        onTap: _submitForm,
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         child: Text('Sign up', style: TextStyle(color: Colors.white)),
       ),
@@ -132,52 +134,49 @@ class _SignupState extends State<Signup> {
     if (state.isbusy) {
       return;
     }
-    loader.showLoader(context);
+    loader!.showLoader(context);
     state.handleGoogleSignIn().then((status) {
       // print(status)
       if (state.user != null) {
-        loader.hideLoader();
+        loader!.hideLoader();
         Navigator.pop(context);
-        widget.loginCallback();
+        widget.loginCallback!();
       } else {
-        loader.hideLoader();
+        loader!.hideLoader();
         cprint('Unable to login', errorIn: '_googleLoginButton');
       }
     });
   }
 
   void _submitForm() {
-    if (_emailController.text.isEmpty) {
+    if (_emailController!.text.isEmpty) {
       customSnackBar(_scaffoldKey, 'Please enter name');
       return;
     }
-    if (_emailController.text.length > 27) {
+    if (_emailController!.text.length > 27) {
       customSnackBar(_scaffoldKey, 'Name length cannot exceed 27 character');
       return;
     }
-    if (_emailController.text == null ||
-        _emailController.text.isEmpty ||
-        _passwordController.text == null ||
-        _passwordController.text.isEmpty ||
-        _confirmController.text == null) {
+    if (_emailController!.text.isEmpty ||
+        _passwordController!.text.isEmpty) {
       customSnackBar(_scaffoldKey, 'Please fill form carefully');
       return;
-    } else if (_passwordController.text != _confirmController.text) {
+    } else if (_passwordController!.text != _confirmController!.text) {
       customSnackBar(
           _scaffoldKey, 'Password and confirm password did not match');
       return;
     }
 
-    loader.showLoader(context);
+    loader!.showLoader(context);
     var state = Provider.of<AuthState>(context, listen: false);
     Random random = new Random();
     int randomNumber = random.nextInt(8);
 
     UserModel user = UserModel(
-      email: _emailController.text.toLowerCase(),
+      email: _emailController!.text.toLowerCase(),
       bio: 'Edit profile to update bio',
       // contact:  _mobileController.text,
-      displayName: _nameController.text,
+      displayName: _nameController!.text,
       dob: DateTime(1950, DateTime.now().month, DateTime.now().day + 3)
           .toString(),
       location: 'Somewhere in universe',
@@ -187,17 +186,17 @@ class _SignupState extends State<Signup> {
     state
         .signUp(
       user,
-      password: _passwordController.text,
+      password: _passwordController!.text,
       scaffoldKey: _scaffoldKey,
     )
         .then((status) {
       print(status);
     }).whenComplete(
       () {
-        loader.hideLoader();
+        loader!.hideLoader();
         if (state.authStatus == AuthStatus.LOGGED_IN) {
           Navigator.pop(context);
-          widget.loginCallback();
+          widget.loginCallback!();
         }
       },
     );

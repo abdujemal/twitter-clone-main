@@ -80,7 +80,7 @@ Widget customText(String msg, {Key key, TextStyle style,TextAlign textAlign = Te
     return Text(msg,style: style,textAlign: textAlign,overflow:overflow,softWrap: softwrap,key: key,);
   }
 }
-Widget customImage(BuildContext context, String path,{double height = 50, bool isBorder = false,}){
+Widget customImage(BuildContext context, String? path,{double height = 50, bool isBorder = false,}){
   return 
    Container(
       decoration: BoxDecoration(
@@ -150,12 +150,12 @@ Widget customNetworkImage(String path,{BoxFit fit = BoxFit.contain}){
     errorWidget: (context, url, error) => Icon(Icons.error),
   );
 }
-dynamic customAdvanceNetworkImage(String path){
+dynamic customAdvanceNetworkImage(String? path){
 if(path == null){
     path = dummyProfilePic;
   }
   return CachedNetworkImageProvider(
-    path ?? dummyProfilePic,
+    path 
   );
 }
 void showAlert(BuildContext context,{@required Function onPressedOk,@required String title,String okText = 'OK', String cancelText = 'Cancel'}) async{

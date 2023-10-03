@@ -5,16 +5,16 @@ import 'package:flutter_twitter_clone/state/authState.dart';
 import 'package:provider/provider.dart';
 
 class FollowerListPage extends StatelessWidget {
-  FollowerListPage({Key key}) : super(key: key);
+  FollowerListPage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var state = Provider.of<AuthState>(context, listen: false);
     return UsersListPage(
       pageTitle: 'Followers',
-      userIdsList: state.profileUserModel?.followersList,
+      userIdsList: state.profileUserModel.followersList,
       appBarIcon: AppIcon.follow,
       emptyScreenText:
-          '${state?.profileUserModel?.userName ?? state.userModel.userName} doesn\'t have any followers',
+          '${state.profileUserModel.userName ?? state.userModel!.userName} doesn\'t have any followers',
       emptyScreenSubTileText:
           'When someone follow them, they\'ll be listed here.',
     );
